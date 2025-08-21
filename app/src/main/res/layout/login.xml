@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+            <TextView
+                android:id="@+id/title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:text="@string/app_title"
+                android:textColor="@color/black"
+                android:textSize='40sp'
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/username_text"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/username_text"
+                android:layout_width="wrap_content"
+                android:layout_height="64dp"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:text="@string/username"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintRight_toLeftOf="@id/username_enter"
+                app:layout_constraintBottom_toTopOf="@id/password_text"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_text" />
+
+            <EditText
+                android:id="@+id/username_enter"
+                android:layout_width="wrap_content"
+                android:layout_height="64dp"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_gravity="center_horizontal"
+                android:ems="12"
+                android:inputType="text"
+                android:text=""
+                android:hint="@string/username_entry"
+                app:layout_constraintBottom_toTopOf="@id/password_enter"
+                app:layout_constraintLeft_toRightOf="@id/username_text"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_text" />
+
+            <TextView
+                android:id="@+id/password_text"
+                android:layout_width="wrap_content"
+                android:layout_height="64dp"
+                android:layout_row="2"
+                android:layout_column="0"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:text="@string/password"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/password_enter"
+                app:layout_constraintBottom_toTopOf="@id/login_buttons"
+                app:layout_constraintTop_toBottomOf="@id/username_text" />
+
+            <EditText
+                android:id="@+id/password_enter"
+                android:layout_width="wrap_content"
+                android:layout_height="64dp"
+                android:layout_row="2"
+                android:layout_column="1"
+                android:layout_gravity="center_horizontal"
+                android:ems="12"
+                android:inputType="textPassword"
+                android:hint="@string/password_entry"
+                app:layout_constraintBottom_toTopOf="@id/login_buttons"
+                app:layout_constraintLeft_toRightOf="@id/password_text"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/username_enter" />
+
+            <LinearLayout
+                android:id="@+id/login_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="2"
+                android:layout_gravity="fill_horizontal"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/password_text">
+
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/account_button"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:onClick="CreateAccountButton"
+                    android:text="@string/create_account" />
+
+                <Space
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/login_button"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:onClick="LoginButton"
+                    android:text="@string/login" />
+
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">ProjectTwoChristianClark</string>
+    <string name="app_title">Weight Tracker</string>
+    <string name="username">Username:</string>
+    <string name="password">Password:</string>
+    <string name="create_account">Create Account</string>
+    <string name="login">Login</string>
+    <string name="curr_weight">Current Weight:</string>
+    <string name="weight_hint">Pounds</string>
+    <string name="sms_perm">SMS Permission</string>
+    <string name="card_date">Jan-01-1970</string>
+    <string name="card_weight">135lb</string>
+    <string name="sms_perm_explain">SMS Permissions: If you would like to have SMS text messages sent to your device, please grant SMS permissions to this application</string>
+    <string name="perm_status">Current Permission Status: Off</string>
+    <string name="request_sms_button">Request SMS Permission</string>
+    <string name="label_date">Date</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_delete">Delete</string>
+    <string name="username_entry">Username Entry</string>
+    <string name="password_entry">Password Entry</string>
+    <string name="add_weight_button">Add current weight</string>
+    <string name="sms_noti_icon">SMS noftification icon</string>
+    <string name="delete_button_icon">Delete Weight Entry</string>
+    <string name="creation_failed">Please enter a Username and Password</string>
+    <string name="invalid_weight">Invalid Weight Entry</string>
+    <string name="new_date">New Date:</string>
+    <string name="goal_weight">Goal Weight:</string>
+</resources>

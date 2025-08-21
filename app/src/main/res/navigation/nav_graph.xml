@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/navigation_add"
+    android:id="@+id/nav_graph">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.snhu.ProjectTwo.fragments.GoalFragment"
+        android:label="Goal"
+        />
+
+    <fragment
+        android:id="@+id/navigation_add"
+        android:name="com.snhu.ProjectTwo.fragments.DatabaseGridFragment"
+        android:label="Add">
+
+        <argument
+            android:name="UserId"
+            app:argType="long"
+            android:defaultValue="-1L"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.snhu.ProjectTwo.fragments.SettingsFragment"
+        android:label="Settings"
+        />
+</navigation>

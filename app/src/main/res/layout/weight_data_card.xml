@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:background="@color/card_back"
+        >
+
+        <TextView
+            android:id="@+id/card_date_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="4dp"
+            android:text="@string/card_date"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/card_weight_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:text="@string/card_weight"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:textColor="@color/black"
+            />
+
+        <ImageButton
+            android:id="@+id/card_delete_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:src="@android:drawable/ic_menu_delete"
+            android:layout_marginStart="4dp"
+            android:background="@color/delete_back"
+            android:contentDescription="@string/delete_button_icon"
+            />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
