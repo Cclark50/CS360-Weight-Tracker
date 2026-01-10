@@ -5,18 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.snhu.ProjectTwo.R;
 import com.snhu.ProjectTwo.activities.CoreApp;
+import com.snhu.ProjectTwo.activities.CoreAppJava;
 import com.snhu.ProjectTwo.utilities.LoginDatabase;
 import com.snhu.ProjectTwo.utilities.UserInfo;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 //@Author Christian Clark

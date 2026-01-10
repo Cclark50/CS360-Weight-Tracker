@@ -14,8 +14,6 @@ import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.databinding.AccountCreateInputBinding
 import com.snhu.ProjectTwo.utilities.LoginDatabase
 import com.snhu.ProjectTwo.utilities.UserLogin
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import kotlin.math.abs
 
 

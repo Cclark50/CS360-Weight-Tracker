@@ -96,7 +96,7 @@ public class LoginActivityJava extends AppCompatActivity {
                 return;
             }
             //switch to the database screen
-            Intent intent = new Intent(this, CoreApp.class);
+            Intent intent = new Intent(this, CoreAppJava.class);
             intent.putExtra("UserId", login.getId());
             startActivity(intent);
             finish();

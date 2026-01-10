@@ -19,16 +19,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.snhu.ProjectTwo.R;
 import com.snhu.ProjectTwo.activities.CoreApp;
+import com.snhu.ProjectTwo.activities.CoreAppJava;
 import com.snhu.ProjectTwo.interfaces.OnItemActionListener;
 import com.snhu.ProjectTwo.utilities.DatabaseAdapter;
 import com.snhu.ProjectTwo.utilities.LoginDatabase;
 import com.snhu.ProjectTwo.utilities.UserInfo;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 //@Author Christian Clark
 //@Date 8-14-25
