@@ -25,4 +25,5 @@
     <string name="invalid_weight">Invalid Weight Entry</string>
     <string name="new_date">New Date:</string>
     <string name="goal_weight">Goal Weight:</string>
+    <string name="remember_me">Remember Me</string>
 </resources>

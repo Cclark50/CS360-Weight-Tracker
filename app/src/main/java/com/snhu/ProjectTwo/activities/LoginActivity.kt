@@ -1,108 +1,166 @@
-package com.snhu.ProjectTwo.activities;
+package com.snhu.ProjectTwo.activities
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.content.Context
+import android.content.Intent
+import android.database.sqlite.SQLiteException
+import android.os.Bundle
+import android.view.View
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.snhu.ProjectTwo.R
+import com.snhu.ProjectTwo.databinding.AccountCreateInputBinding
+import com.snhu.ProjectTwo.utilities.LoginDatabase
+import com.snhu.ProjectTwo.utilities.UserLogin
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import kotlin.math.abs
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import com.snhu.ProjectTwo.R;
-import com.snhu.ProjectTwo.fragments.DatabaseGridFragment;
-import com.snhu.ProjectTwo.utilities.LoginDatabase;
-import com.snhu.ProjectTwo.utilities.UserLogin;
 
 //@Author Christian Clark
-//@Date 8-14-25
+//@Date 1-9-26
 
 //This is the launched activity that holds the account creation screen
-public class LoginActivity extends AppCompatActivity {
+class LoginActivity : AppCompatActivity() {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceData){
-        super.onCreate(savedInstanceData);
-        setContentView(R.layout.login);
+    /* using lazy loading so that any access to the username of password
+    ** fields are loaded on use, preventing any uninitialized access and
+    ** storing the references for later use
+    */
+    private val _usernameEntry: EditText by lazy { findViewById<EditText>(R.id.username_enter) }
+    private val _passwordEntry: EditText by lazy { findViewById<EditText>(R.id.password_enter) }
+    private val _checkBox: CheckBox by lazy { findViewById<CheckBox>(R.id.checkBox) }
+
+    private var _checkBoxStatus: Boolean = false
+
+    override fun onCreate(savedInstanceData : Bundle?){
+        super.onCreate(savedInstanceData)
+        setContentView(R.layout.login)
+
+        // get the app preferences to get the stored username and checkbox status
+        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        _checkBoxStatus = prefs.getBoolean("remember_me", false)
+        _checkBox.isChecked = _checkBoxStatus;
+
+        _checkBox.setOnCheckedChangeListener { button, isChecked ->
+            _checkBox.isChecked = isChecked;
+        }
+
+        // if we've stored the username, set the edit text to it or an empty string
+        _usernameEntry.setText(prefs.getString("remembered_username", ""))
     }
 
-    public void CreateAccountButton(View view){
-        EditText usernameEntry = findViewById(R.id.username_enter);
-        String username = usernameEntry.getText().toString();
-        EditText passwordEntry = findViewById(R.id.password_enter);
-        String password = passwordEntry.getText().toString();
+    fun createAccountButton(view: View){
+        val username: String = _usernameEntry.text.toString()
+        val password: String = _passwordEntry.text.toString()
 
-        //Username or password is empty
+        // If the username or password is empty then let the user know
         if(username.isEmpty() || password.isEmpty()){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Missing Username or Password");
-            LayoutInflater inflater = getLayoutInflater();
-            View failedAlert = inflater.inflate(R.layout.create_account_failed, null);
-            builder.setView(failedAlert);
-            builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
-            AlertDialog dialog = builder.create();
-            dialog.show();
-            return;
+            AlertDialog.Builder(this).apply{
+                setTitle("Missing Username or Password")
+                setPositiveButton("OK", null)
+            }.show()
+            return
         }
 
-        //User needs to enter a goal weight when creating their account
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Please enter a goal weight");
-        LayoutInflater inflater = getLayoutInflater();
-        View accountCreationBox = inflater.inflate(R.layout.account_create_input, null);
-        builder.setView(accountCreationBox);
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            EditText weightInput = accountCreationBox.findViewById(R.id.weightEntry);
-            String weightStr = weightInput.getText().toString();
-            try{
-                float realWeight = Float.parseFloat(weightStr);
-                Log.d("WEIGHT ENTRY", "weight is: " + realWeight);
-                CreateAccount(username, password, realWeight);
-            }catch (Exception e){
-                Toast.makeText(this, "Invalid Weight Entered", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
+        // create a dialog for a user to input their goal weight before creating their account
+        AlertDialog.Builder(this).apply{
+            setTitle("Please Enter a Goal Weight")
+            val accCreate = AccountCreateInputBinding.inflate(layoutInflater)
+            setView(accCreate.root)
+            setPositiveButton("OK") { dialog, _ ->
+                val goalWeightStr = accCreate.weightEntry.text.toString()
+                val currWeightStr = accCreate.currWeightEntry.text.toString()
+                try{
+                    val goalWeight = goalWeightStr.toFloatOrNull()
+                    val currWeight = currWeightStr.toFloatOrNull()
+                    // making sure the value we enter is valid
+                    if((goalWeight == null || currWeight == null) ||
+                        (goalWeight !in 0.0..3000.0 || abs(goalWeight) < 0.0001f) ||
+                        (currWeight !in 0.0..3000.0 || abs(currWeight) < 0.0001f)
+                        ) {
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "Invalid Weight Entered",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        dialog.dismiss()
+                        return@setPositiveButton
+                    }
+                    createAccount(username, password, goalWeight, currWeight)
+                    loginButton(view)
+                }catch(ex: NumberFormatException){
+                    Toast.makeText(this@LoginActivity, "Invalid Weight Entered", Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
+                }
             }
-        });
-        builder.setNegativeButton("Cancel", ((dialog, which) -> {
-            dialog.dismiss();
-        }));
-        AlertDialog dialog = builder.create();
-        dialog.show();
+            setNegativeButton("Cancel", null)
+        }.show()
     }
 
-    public void CreateAccount(String username, String password, float weight){
-        try(LoginDatabase db = new LoginDatabase(this)){
-            db.AddNewUser(username, password, weight);
-        }catch (Exception e){
-            Toast.makeText(this, "Something went wrong accessing the database" + e.toString(), Toast.LENGTH_LONG).show();
+    fun createAccount(username: String, password :String, goalWeight: Float, currWeight: Float){
+        try{
+            LoginDatabase(this).use{ db ->
+                val currUser = db.AddNewUser(username, password, goalWeight)
+                db.AddNewWeight(currUser, System.currentTimeMillis(), currWeight)
+            }
+        }
+        catch(sqlEx: SQLiteException)
+        {
+            Toast.makeText(this@LoginActivity, sqlEx.toString(), Toast.LENGTH_LONG).show()
+        }
+        catch (ex: Exception){
+            Toast.makeText(this@LoginActivity, "Something went wrong accessing the internal database", Toast.LENGTH_LONG).show()
         }
     }
 
-    public void LoginButton(View view){
-        EditText usernameEntry = findViewById(R.id.username_enter);
-        String username = usernameEntry.getText().toString();
-        EditText passwordEntry = findViewById(R.id.password_enter);
-        String password = passwordEntry.getText().toString();
+    fun loginButton(view: View){
+        val username = _usernameEntry.text.toString()
+        val password = _passwordEntry.text.toString()
 
         if(username.isEmpty() || password.isEmpty()){
-            Toast.makeText(this, "Username or Password is missing", Toast.LENGTH_SHORT).show();
-            return;
+            Toast.makeText(this, "Username or Password is Empty", Toast.LENGTH_SHORT).show()
+            return
         }
 
-        try(LoginDatabase db = new LoginDatabase(this)){
-            UserLogin login = db.ConfirmLogin(username, password);
-            if(login == null){
-                Toast.makeText(this, "Invalid Username or Password", Toast.LENGTH_LONG).show();
-                return;
+        try{
+            LoginDatabase(this).use { db ->
+                val loginData = db.ConfirmLogin(username, password)
+                if(loginData == null){
+                    Toast.makeText(this@LoginActivity, "Invalid Username or Password", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                login(loginData)
             }
-            //switch to the database screen
-            Intent intent = new Intent(this, CoreApp.class);
-            intent.putExtra("UserId", login.getId());
-            startActivity(intent);
-            finish();
-        }catch (Exception e){
-            Log.d("LOGINBUTTON", "Login button failed " + e.getMessage());
+        }catch (ex: Exception){
+            Toast.makeText(this, "Something went wrong accessing the internal database", Toast.LENGTH_SHORT).show()
         }
     }
+
+    fun login(loginData: UserLogin){
+        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        // if we have the remember me box checked store the username
+        if(_checkBox.isChecked){
+            with(prefs.edit()){
+                putBoolean("remember_me", true)
+                putString("remembered_username", loginData.username)
+                apply()
+            }
+        }else{
+            // else clear the stored username
+            with(prefs.edit()){
+                putBoolean("remember_me", false)
+                putString("remembered_username", "")
+                apply()
+            }
+        }
+        // start the next activity
+        startActivity(Intent(this@LoginActivity, CoreApp::class.java).apply{
+            putExtra("UserId", loginData.id)
+        })
+    }
+
 }

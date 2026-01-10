@@ -93,12 +93,14 @@ public class DatabaseGridFragment extends Fragment {
                         Toast.makeText(getContext(), "Weight too high", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                    String dateString = dateFormat.format(new Date());
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+//                    String dateString = dateFormat.format(new Date());
+
+                    long currDate = System.currentTimeMillis();
 
                     //adds the current weight to the database
                     LoginDatabase db = new LoginDatabase(getContext());
-                    db.AddNewWeight(_userId, dateString, currWeight);
+                    db.AddNewWeight(_userId, currDate, currWeight);
                     _list = db.GetInfoListByUser(_userId);
                     _adapter.updateData(_list);
 

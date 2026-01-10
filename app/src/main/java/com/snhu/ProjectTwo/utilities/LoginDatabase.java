@@ -65,7 +65,7 @@ public class LoginDatabase extends SQLiteOpenHelper {
                 "create table " + UserInfoTable.TABLE + " (" +
                         UserInfoTable.COL_ID + " integer primary key autoincrement, " +
                         UserInfoTable.COL_USER + " integer not null, " +
-                        UserInfoTable.COL_DATE + " text, " +
+                        UserInfoTable.COL_DATE + " integer, " +
                         UserInfoTable.COL_WEIGHT + " real, " +
                         "foreign key (" + UserInfoTable.COL_USER + ") references " +
                         LoginTable.TABLE + "(" + LoginTable.COL_ID + "));"
@@ -137,7 +137,7 @@ public class LoginDatabase extends SQLiteOpenHelper {
     }
 
     //adds a new weight to the database
-    public long AddNewWeight(long id, String date, float weight){
+    public long AddNewWeight(long id, long date, float weight){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -174,7 +174,7 @@ public class LoginDatabase extends SQLiteOpenHelper {
                 do{
                     long id = cursor.getLong(cursor.getColumnIndexOrThrow(UserInfoTable.COL_ID));
                     long curuser = cursor.getLong(cursor.getColumnIndexOrThrow(UserInfoTable.COL_USER));
-                    String date = cursor.getString(cursor.getColumnIndexOrThrow(UserInfoTable.COL_DATE));
+                    long date = cursor.getLong(cursor.getColumnIndexOrThrow(UserInfoTable.COL_DATE));
                     float weight = cursor.getFloat(cursor.getColumnIndexOrThrow(UserInfoTable.COL_WEIGHT));
                     UserInfo info = new UserInfo(id, curuser, date, weight);
                     list.add(info);
