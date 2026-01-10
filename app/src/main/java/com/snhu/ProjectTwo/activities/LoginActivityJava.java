@@ -74,7 +74,7 @@ public class LoginActivityJava extends AppCompatActivity {
         try(LoginDatabase db = new LoginDatabase(this)){
             db.AddNewUser(username, password, weight);
         }catch (Exception e){
-            Toast.makeText(this, "Something went wrong accessing the database" + e.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Something went wrong accessing the database" + e, Toast.LENGTH_LONG).show();
         }
     }
 

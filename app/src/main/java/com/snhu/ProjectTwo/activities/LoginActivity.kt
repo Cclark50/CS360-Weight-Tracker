@@ -15,6 +15,7 @@ import com.snhu.ProjectTwo.databinding.AccountCreateInputBinding
 import com.snhu.ProjectTwo.utilities.LoginDatabase
 import com.snhu.ProjectTwo.utilities.UserLogin
 import kotlin.math.abs
+import androidx.core.content.edit
 
 
 //@Author Christian Clark
@@ -38,11 +39,11 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.login)
 
         // get the app preferences to get the stored username and checkbox status
-        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         _checkBoxStatus = prefs.getBoolean("remember_me", false)
-        _checkBox.isChecked = _checkBoxStatus;
+        _checkBox.isChecked = _checkBoxStatus
 
-        _checkBox.setOnCheckedChangeListener { button, isChecked ->
+        _checkBox.setOnCheckedChangeListener { _, isChecked ->
             _checkBox.isChecked = isChecked;
         }
 
@@ -139,20 +140,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun login(loginData: UserLogin){
-        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         // if we have the remember me box checked store the username
         if(_checkBox.isChecked){
-            with(prefs.edit()){
+            prefs.edit {
                 putBoolean("remember_me", true)
                 putString("remembered_username", loginData.username)
-                apply()
             }
         }else{
             // else clear the stored username
-            with(prefs.edit()){
+            prefs.edit {
                 putBoolean("remember_me", false)
                 putString("remembered_username", "")
-                apply()
             }
         }
         // start the next activity

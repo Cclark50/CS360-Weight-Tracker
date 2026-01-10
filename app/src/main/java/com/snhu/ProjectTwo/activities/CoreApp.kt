@@ -14,8 +14,8 @@ class CoreApp : AppCompatActivity(){
     val _navBar: BottomNavigationView by lazy { findViewById<BottomNavigationView>(R.id.nav_view) }
     var _navController: NavController? = null
 
-    override fun onCreate(bundle: Bundle?){
-        super.onCreate(bundle)
+    override fun onCreate(savedInstanceData: Bundle?){
+        super.onCreate(savedInstanceData)
         setContentView(R.layout.core_app_frag_holder)
         _userId = intent.getLongExtra("UserId", -1)
 

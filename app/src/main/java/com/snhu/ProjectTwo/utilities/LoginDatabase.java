@@ -25,6 +25,7 @@ public class LoginDatabase extends SQLiteOpenHelper {
     private static final int VERSION = 1;
     private static final String TAG_LOGIN = "com.snhu.ProjectTwo.utilities.LoginDatabase";
     private static final String TAG_INFO = "UserInfoDatabase";
+    private static final String TAG_GOAL = "GoalTableDatabase";
 
     public LoginDatabase(Context context){
         super(context, DATABASE_NAME, null, VERSION);
@@ -46,6 +47,14 @@ public class LoginDatabase extends SQLiteOpenHelper {
         private static final String COL_USER = "user";
         private static final String COL_DATE = "date";
         private static final String COL_WEIGHT = "weight";
+    }
+
+    private static final class GoalTable{
+        private static final String TABLE = "goaltable";
+        private static final String COL_ID = "_id";
+        private static final String COL_GOAL = "goal";
+        private static final String COL_START = "start";
+        private static final String COL_USER = "user";
     }
 
     //creation of both tables
@@ -70,12 +79,23 @@ public class LoginDatabase extends SQLiteOpenHelper {
                         "foreign key (" + UserInfoTable.COL_USER + ") references " +
                         LoginTable.TABLE + "(" + LoginTable.COL_ID + "));"
         );
+        // create a new table to store the start and goal weights for each user
+        db.execSQL(
+                "create table " + GoalTable.TABLE + " (" +
+                GoalTable.COL_ID + " integer primary key autoincrement," +
+                        GoalTable.COL_USER + " integer not null, " +
+                        GoalTable.COL_START + " real not null, " +
+                        GoalTable.COL_GOAL + " real not null, " +
+                        "foreign key (" + GoalTable.COL_USER + ") references " +
+                        LoginTable.TABLE + "(" + LoginTable.COL_ID + "));"
+        );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
         db.execSQL("drop table if exists " + UserInfoTable.TABLE);
         db.execSQL("drop table if exists " + LoginTable.TABLE);
+        db.execSQL("drop table if exists " + GoalTable.TABLE);
         onCreate(db);
     }
 
@@ -277,6 +297,36 @@ public class LoginDatabase extends SQLiteOpenHelper {
             return null;
         }catch (Exception e){
             Log.d(TAG_LOGIN, "Failed to query user login for user: " + username, e);
+            return null;
+        }
+    }
+
+    public GoalRow GetGoalRow(long id){
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = new String[]{
+                GoalTable.COL_ID,
+                GoalTable.COL_USER,
+                GoalTable.COL_START,
+                GoalTable.COL_GOAL
+        };
+        try(Cursor cursor = db.query(
+                GoalTable.TABLE,
+                columns,
+                GoalTable.COL_USER + " = ?",
+                new String[]{String.valueOf(id)},
+                null, null, null
+        )){
+            if(cursor.moveToFirst()){
+                long currId = cursor.getLong(cursor.getColumnIndexOrThrow(GoalTable.COL_ID));
+                long user = cursor.getLong(cursor.getColumnIndexOrThrow(GoalTable.COL_USER));
+                float start = cursor.getFloat(cursor.getColumnIndexOrThrow(GoalTable.COL_START));
+                float goal = cursor.getFloat(cursor.getColumnIndexOrThrow(GoalTable.COL_GOAL));
+
+                return new GoalRow(currId, user, start, goal);
+            }
+            return null;
+        }catch (Exception ex){
+            Log.d(TAG_GOAL, "User does not exist when getting goal row", ex);
             return null;
         }
     }
