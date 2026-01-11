@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.snhu.ProjectTwo.R;
 import com.snhu.ProjectTwo.activities.CoreApp;
-import com.snhu.ProjectTwo.activities.CoreAppJava;
 import com.snhu.ProjectTwo.interfaces.OnItemActionListener;
 import com.snhu.ProjectTwo.utilities.DatabaseAdapter;
 import com.snhu.ProjectTwo.utilities.LoginDatabase;

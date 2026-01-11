@@ -62,7 +62,7 @@ public class DatabaseAdapter extends RecyclerView.Adapter<DatabaseAdapter.ViewHo
         }
 
         public void bind(UserInfo item, OnItemClickListener listener){
-            dateText.setText(item.getDate());
+            dateText.setText(item.getDateString());
             weightText.setText(String.valueOf(item.getWeight()));
 
             if(listener != null) {

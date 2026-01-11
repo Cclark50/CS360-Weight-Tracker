@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.snhu.ProjectTwo.R;
 import com.snhu.ProjectTwo.utilities.LoginDatabase;
 import com.snhu.ProjectTwo.utilities.UserLogin;
+import com.snhu.ProjectTwo.utilities.UserLoginJava;
 
 //@Author Christian Clark
 //@Date 8-14-25
@@ -96,7 +97,7 @@ public class LoginActivityJava extends AppCompatActivity {
                 return;
             }
             //switch to the database screen
-            Intent intent = new Intent(this, CoreAppJava.class);
+            Intent intent = new Intent(this, CoreApp.class);
             intent.putExtra("UserId", login.getId());
             startActivity(intent);
             finish();

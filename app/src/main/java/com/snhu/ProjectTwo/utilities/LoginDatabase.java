@@ -11,7 +11,6 @@ import android.util.Log;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 //@Author Christian Clark
@@ -299,6 +298,17 @@ public class LoginDatabase extends SQLiteOpenHelper {
             Log.d(TAG_LOGIN, "Failed to query user login for user: " + username, e);
             return null;
         }
+    }
+
+    public long SetGoal(long id, float start, float goal){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(GoalTable.COL_USER, id);
+        values.put(GoalTable.COL_START, start);
+        values.put(GoalTable.COL_GOAL, goal);
+
+        return db.insert(GoalTable.TABLE, null, values);
     }
 
     public GoalRow GetGoalRow(long id){

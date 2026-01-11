@@ -1,9 +1,9 @@
 package com.snhu.ProjectTwo.activities
 
-import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteException
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
@@ -13,9 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.databinding.AccountCreateInputBinding
 import com.snhu.ProjectTwo.utilities.LoginDatabase
-import com.snhu.ProjectTwo.utilities.UserLogin
+import com.snhu.ProjectTwo.utilities.UserLoginJava
 import kotlin.math.abs
 import androidx.core.content.edit
+import com.snhu.ProjectTwo.utilities.UserLogin
 
 
 //@Author Christian Clark
@@ -103,6 +104,7 @@ class LoginActivity : AppCompatActivity() {
         try{
             LoginDatabase(this).use{ db ->
                 val currUser = db.AddNewUser(username, password, goalWeight)
+                db.SetGoal(currUser, currWeight, goalWeight)
                 db.AddNewWeight(currUser, System.currentTimeMillis(), currWeight)
             }
         }
@@ -111,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this@LoginActivity, sqlEx.toString(), Toast.LENGTH_LONG).show()
         }
         catch (ex: Exception){
-            Toast.makeText(this@LoginActivity, "Something went wrong accessing the internal database", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@LoginActivity, "Something went wrong accessing the internal database" + ex, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -135,7 +137,8 @@ class LoginActivity : AppCompatActivity() {
                 login(loginData)
             }
         }catch (ex: Exception){
-            Toast.makeText(this, "Something went wrong accessing the internal database", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Something went wrong accessing the internal database: " + ex, Toast.LENGTH_SHORT).show()
+            Log.e("Database Login", "ex: ", ex)
         }
     }
 
