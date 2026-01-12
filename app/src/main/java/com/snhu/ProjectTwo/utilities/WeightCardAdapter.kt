@@ -1,4 +1,47 @@
 package com.snhu.ProjectTwo.utilities
 
-class WeightCardAdapter {
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.snhu.ProjectTwo.R
+import org.w3c.dom.Text
+
+class WeightCardAdapter(
+    private val _context: Context,
+    private var _items: MutableList<UserInfo>,
+    private val _id: Long,
+    private val _onDelete: (info: UserInfo, position: Int) -> Unit,
+    private val _onDate: (info: UserInfo, position: Int) -> Unit
+): RecyclerView.Adapter<WeightCardAdapter.ViewHolder>(){
+
+    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+        val _dateText = itemView.findViewById<TextView>(R.id.card_date_text)
+        val weightText = itemView.findViewById<TextView>(R.id.card_weight_text)
+        val deleteButton = itemView.findViewById<ImageButton>(R.id.card_delete_button)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.weight_data_card, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item: UserInfo = _items.get(position)
+        holder.deleteButton.setOnClickListener { _onDelete(item, position) }
+        holder._dateText.setOnClickListener { _onDate(item, position) }
+    }
+
+    override fun getItemCount(): Int {
+        return _items.size
+    }
+
+    public fun updateData(newInfo: List<UserInfo>){
+        _items.clear()
+        _items.addAll(newInfo)
+        notifyDataSetChanged()
+    }
 }

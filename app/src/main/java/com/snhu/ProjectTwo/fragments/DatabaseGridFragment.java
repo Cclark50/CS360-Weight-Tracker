@@ -149,9 +149,10 @@ public class DatabaseGridFragment extends Fragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         getContext(),
                         (view, year, month, dayOfMonth) -> {
-                            String date = year + "-" + (month + 1) + "-" + dayOfMonth;
+                            //String date = year + "-" + (month + 1) + "-" + dayOfMonth;
                             LoginDatabase db = new LoginDatabase(getContext());
-                            Toast.makeText(getContext(), "date: " + date, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), "date: " + date, Toast.LENGTH_SHORT).show();
+                            long date = 0;
                             db.ChangeDateAt(info.getId(), _userId, date);
                             _adapter.updateData(db.GetInfoListByUser(_userId));
                         },

@@ -219,7 +219,7 @@ public class LoginDatabase extends SQLiteOpenHelper {
     }
 
     //changes the date of a weight
-    public int ChangeDateAt(long id, long user, String date){
+    public int ChangeDateAt(long id, long user, long date){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
