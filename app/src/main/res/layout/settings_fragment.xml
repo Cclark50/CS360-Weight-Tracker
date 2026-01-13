@@ -37,7 +37,7 @@
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/sms_icon"
+                    android:src="@drawable/alarm_icon"
                     android:layout_weight="0.5"
                     android:contentDescription="@string/sms_noti_icon"
                     />
@@ -53,7 +53,7 @@
                     />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/sms_switch"
+                    android:id="@+id/noti_switch"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:checked="false"

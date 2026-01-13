@@ -1,60 +1,75 @@
 package com.snhu.ProjectTwo.activities
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.databinding.AccountCreateInputBinding
 import com.snhu.ProjectTwo.utilities.LoginDatabase
-import com.snhu.ProjectTwo.utilities.UserLoginJava
 import kotlin.math.abs
 import androidx.core.content.edit
+import com.snhu.ProjectTwo.databinding.LoginBinding
 import com.snhu.ProjectTwo.utilities.UserLogin
 
 
 //@Author Christian Clark
 //@Date 1-9-26
 
-//This is the launched activity that holds the account creation screen
+/* This is the launched activity that holds the account creation screen
+** this screen allows a user to create or log into an account
+*/
 class LoginActivity : AppCompatActivity() {
 
-    /* using lazy loading so that any access to the username of password
-    ** fields are loaded on use, preventing any uninitialized access and
-    ** storing the references for later use
-    */
-    private val _usernameEntry: EditText by lazy { findViewById<EditText>(R.id.username_enter) }
-    private val _passwordEntry: EditText by lazy { findViewById<EditText>(R.id.password_enter) }
-    private val _checkBox: CheckBox by lazy { findViewById<CheckBox>(R.id.checkBox) }
-
+    private val GOAL_CHANNEL_ID: String = "goal_alerts"
     private var _checkBoxStatus: Boolean = false
+
+    // With view binding I can forgo needing to store each element I need to access in code
+    private lateinit var binding: LoginBinding
 
     override fun onCreate(savedInstanceData : Bundle?){
         super.onCreate(savedInstanceData)
-        setContentView(R.layout.login)
+        binding = LoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // get the app preferences to get the stored username and checkbox status
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         _checkBoxStatus = prefs.getBoolean("remember_me", false)
-        _checkBox.isChecked = _checkBoxStatus
+        binding.checkBox.isChecked = _checkBoxStatus
 
-        _checkBox.setOnCheckedChangeListener { _, isChecked ->
-            _checkBox.isChecked = isChecked;
+        binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            binding.checkBox.isChecked = isChecked;
         }
 
         // if we've stored the username, set the edit text to it or an empty string
-        _usernameEntry.setText(prefs.getString("remembered_username", ""))
+        binding.usernameEnter.setText(prefs.getString("remembered_username", ""))
+
+        setupNotificationChannel()
+    }
+
+    fun setupNotificationChannel(){
+        // https://developer.android.com/develop/ui/views/notifications/build-notification
+        // Necessary code to create a notification channel in the application
+        val name: String = getString(R.string.notification_channel)
+        val descriptionStr: String = getString(R.string.notification_channel_description)
+        val importance: Int = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(GOAL_CHANNEL_ID, name, importance).apply{
+            description = descriptionStr
+        }
+        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     fun createAccountButton(view: View){
-        val username: String = _usernameEntry.text.toString()
-        val password: String = _passwordEntry.text.toString()
+        val username: String = binding.usernameEnter.text.toString()
+        val password: String = binding.passwordEnter.text.toString()
 
         // If the username or password is empty then let the user know
         if(username.isEmpty() || password.isEmpty()){
@@ -92,7 +107,7 @@ class LoginActivity : AppCompatActivity() {
                     createAccount(username, password, goalWeight, currWeight)
                     loginButton(view)
                 }catch(ex: NumberFormatException){
-                    Toast.makeText(this@LoginActivity, "Invalid Weight Entered", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@LoginActivity, getString(R.string.error_invalid_weight), Toast.LENGTH_LONG).show()
                     dialog.dismiss()
                 }
             }
@@ -102,6 +117,7 @@ class LoginActivity : AppCompatActivity() {
 
     fun createAccount(username: String, password :String, goalWeight: Float, currWeight: Float){
         try{
+            // creates database values for all required information
             LoginDatabase(this).use{ db ->
                 val currUser = db.AddNewUser(username, password, goalWeight)
                 db.SetGoal(currUser, currWeight, goalWeight)
@@ -118,9 +134,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun loginButton(view: View){
-        val username = _usernameEntry.text.toString()
-        val password = _passwordEntry.text.toString()
+        val username = binding.usernameEnter.text.toString()
+        val password = binding.passwordEnter.text.toString()
 
+        // if we're missing login information inform the user
         if(username.isEmpty() || password.isEmpty()){
             Toast.makeText(this, "Username or Password is Empty", Toast.LENGTH_SHORT).show()
             return
@@ -142,10 +159,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    // Logs into the application
     fun login(loginData: UserLogin){
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         // if we have the remember me box checked store the username
-        if(_checkBox.isChecked){
+        if(binding.checkBox.isChecked){
             prefs.edit {
                 putBoolean("remember_me", true)
                 putString("remembered_username", loginData.username)

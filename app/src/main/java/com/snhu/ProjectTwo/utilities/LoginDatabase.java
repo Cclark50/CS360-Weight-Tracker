@@ -108,14 +108,14 @@ public class LoginDatabase extends SQLiteOpenHelper {
     public float GetGoalWeight(long userId){
         SQLiteDatabase db = getReadableDatabase();
         try(Cursor cursor = db.query(
-                LoginTable.TABLE,
+                GoalTable.TABLE,
                 new String[]{LoginTable.COL_GOAL},
                 LoginTable.COL_ID + " = ?",
                 new String[]{String.valueOf(userId)},
                 null, null, null
         )){
             if(cursor.moveToFirst()){
-                return cursor.getFloat(cursor.getColumnIndexOrThrow(LoginTable.COL_GOAL));
+                return cursor.getFloat(cursor.getColumnIndexOrThrow(GoalTable.COL_GOAL));
             }
             throw new Exception();
         }catch (Exception e){
