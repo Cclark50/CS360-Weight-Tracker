@@ -10,6 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.databinding.WeightDataCardBinding
 
+//@Author Christian Clark
+//@Date 1-9-26
+
+/* This class if for the cards that show up in the list fragment
+** Each card contains the weight and date of the record
+** This is used for the recycler view in the list fragment
+*/
+
 class WeightCardAdapter(
     private val _context: Context,
     private var _items: MutableList<UserInfo>,
@@ -19,8 +27,6 @@ class WeightCardAdapter(
 ): RecyclerView.Adapter<WeightCardAdapter.ViewHolder>(){
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        var binding: WeightDataCardBinding? = null
-        val _binding get() = binding!!
         val _dateText = itemView.findViewById<TextView>(R.id.card_date_text)
         val _weightText = itemView.findViewById<TextView>(R.id.card_weight_text)
         val _deleteButton = itemView.findViewById<ImageButton>(R.id.card_delete_button)

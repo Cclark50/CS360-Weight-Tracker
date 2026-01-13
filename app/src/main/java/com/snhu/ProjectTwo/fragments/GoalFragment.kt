@@ -10,6 +10,14 @@ import com.snhu.ProjectTwo.activities.CoreApp
 import com.snhu.ProjectTwo.databinding.GoalFragmentBinding
 import com.snhu.ProjectTwo.utilities.LoginDatabase
 
+
+//@Author Christian Clark
+//@Date 1-9-26
+
+/* Fragment that shows a user's progress towards their goal
+** Shows a progress bar to visualize how close they are to reaching their goal
+*/
+
 class GoalFragment : Fragment(){
 
     // Tag for use when logging
@@ -21,7 +29,7 @@ class GoalFragment : Fragment(){
     private var _progressEnd: Float = 0f
     private var _currProgress: Float = 0f
 
-    // Use view binding to be cleaner and take advantage o
+    // Using view binding to be cleaner
     private var _binding: GoalFragmentBinding? = null
     private val binding get() = _binding!!
 

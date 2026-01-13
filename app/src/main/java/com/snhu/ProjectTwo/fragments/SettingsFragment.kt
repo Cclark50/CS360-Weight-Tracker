@@ -16,6 +16,13 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.snhu.ProjectTwo.R
 
+//@Author Christian Clark
+//@Date 1-9-26
+
+/* Fragment that allows a user to change settings
+** Right now the only setting available is to turn on notifications
+*/
+
 class SettingsFragment: Fragment(){
 
     val SEND_NOTIFICATION_PERMISSION_REQUEST_CODE = 101;

@@ -24,6 +24,15 @@ import java.time.LocalDate
 import java.time.ZoneId
 import kotlin.math.abs
 
+
+//@Author Christian Clark
+//@Date 1-9-26
+
+/* This is the fragment that contains the list of recoded weights
+** Each record allows for deletion or changing the date
+** When a user gets close to, or reaches, their goal, a notification will be sent
+*/
+
 class DatabaseGridFragment: Fragment(){
 
     private lateinit var _adapter: WeightCardAdapter
