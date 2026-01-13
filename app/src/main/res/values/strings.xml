@@ -26,4 +26,8 @@
     <string name="new_date">New Date:</string>
     <string name="goal_weight">Goal Weight:</string>
     <string name="remember_me">Remember Me</string>
+    <string name="goal_weight_missing_or_corrupted">Goal weight missing or corrupted</string>
+    <string name="no_current_weight_found">No current weight found</string>
+    <string name="pounds">%1$.1f Pounds</string>
+    <string name="remaining_pounds">Remaining:\n%1$.1f Pounds\n</string>
 </resources>

@@ -167,7 +167,7 @@ public class LoginDatabase extends SQLiteOpenHelper {
         return db.insert(UserInfoTable.TABLE, null, values);
     }
 
-    //gets a list of a user's weights ans dates
+    //gets a list of a user's weights and dates
     public ArrayList<UserInfo> GetInfoListByUser(long user){
         if(user <= 0){
             return new ArrayList<>();

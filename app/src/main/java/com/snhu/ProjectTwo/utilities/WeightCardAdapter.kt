@@ -8,7 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.snhu.ProjectTwo.R
-import org.w3c.dom.Text
+import com.snhu.ProjectTwo.databinding.WeightDataCardBinding
 
 class WeightCardAdapter(
     private val _context: Context,
@@ -19,9 +19,16 @@ class WeightCardAdapter(
 ): RecyclerView.Adapter<WeightCardAdapter.ViewHolder>(){
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+        var binding: WeightDataCardBinding? = null
+        val _binding get() = binding!!
         val _dateText = itemView.findViewById<TextView>(R.id.card_date_text)
-        val weightText = itemView.findViewById<TextView>(R.id.card_weight_text)
-        val deleteButton = itemView.findViewById<ImageButton>(R.id.card_delete_button)
+        val _weightText = itemView.findViewById<TextView>(R.id.card_weight_text)
+        val _deleteButton = itemView.findViewById<ImageButton>(R.id.card_delete_button)
+
+        fun bind(item: UserInfo){
+            _dateText.setText(item.getDateString())
+            _weightText.setText(item.weight.toString())
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,8 +38,9 @@ class WeightCardAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item: UserInfo = _items.get(position)
-        holder.deleteButton.setOnClickListener { _onDelete(item, position) }
+        holder._deleteButton.setOnClickListener { _onDelete(item, position) }
         holder._dateText.setOnClickListener { _onDate(item, position) }
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int {

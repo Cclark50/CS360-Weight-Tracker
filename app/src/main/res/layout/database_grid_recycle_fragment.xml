@@ -36,7 +36,7 @@
             android:layout_weight="0.25"
             android:ems="5"
             android:hint="@string/weight_hint"
-            android:inputType="text"
+            android:inputType="numberDecimal"
             android:text="" />
 
         <ImageButton
