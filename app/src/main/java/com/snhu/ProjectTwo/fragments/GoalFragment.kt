@@ -47,14 +47,14 @@ class GoalFragment : Fragment(){
             val goals = db.GetGoalRow(_userId)
             _goalWeight = goals.goal
             _startWeight = goals.start
-        }catch (ex: Exception){
+        }catch (_: Exception){
             _goalWeight = 0f
             binding.goalWeightShow.text = getString(R.string.goal_weight_missing_or_corrupted)
         }
         try{
             val list = db.GetInfoListByUser(_userId)
             _currWeight = list.get(0).weight
-        }catch(ex: Exception){
+        }catch(_: Exception){
             _currWeight = 0f
             binding.currWeightShow.text = getString(R.string.no_current_weight_found)
         }
@@ -83,14 +83,14 @@ class GoalFragment : Fragment(){
             val goals = db.GetGoalRow(_userId)
             _goalWeight = goals.goal
             _startWeight = goals.start
-        }catch (ex: Exception){
+        }catch (_: Exception){
             _goalWeight = 0f
             binding.goalWeightShow.text = getString(R.string.goal_weight_missing_or_corrupted)
         }
         try{
             val list = db.GetInfoListByUser(_userId)
             _currWeight = list.get(0).weight
-        }catch(ex: Exception){
+        }catch(_: Exception){
             _currWeight = 0f
             binding.currWeightShow.text = getString(R.string.no_current_weight_found)
         }

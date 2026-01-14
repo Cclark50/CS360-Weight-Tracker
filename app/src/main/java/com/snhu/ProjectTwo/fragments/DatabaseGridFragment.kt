@@ -69,7 +69,7 @@ class DatabaseGridFragment: Fragment(){
     }
 
     private fun setupAddButton(){
-        binding.weightAddButton.setOnClickListener { view ->
+        binding.weightAddButton.setOnClickListener { _ ->
             try{
                 var currWeight = binding.weightEntryDatabase.text.toString().toFloatOrNull()
                 binding.weightEntryDatabase.setText("")
@@ -93,7 +93,7 @@ class DatabaseGridFragment: Fragment(){
                     return@setOnClickListener
                 }
                 currWeight = _list.get(0).weight
-                var weightToGo: Float = 0f
+                var weightToGo = 0f
                 var alert: AlertType = AlertType.Do_Not_Send
                 if(currWeight > goalWeight){
                     weightToGo = currWeight - goalWeight
@@ -109,7 +109,7 @@ class DatabaseGridFragment: Fragment(){
                 }
 
             }catch (_: Exception){
-                Toast.makeText(requireContext(), getString(R.string.error_invalid_weight), Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), getString(R.string.error_invalid_weight), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -165,7 +165,7 @@ class DatabaseGridFragment: Fragment(){
 
     // sends a notification and updates the notification id
     fun sendNotification(title: String, message: String){
-        var notiBuilder = NotificationCompat.Builder(requireContext(), "goal_alerts")
+        val notiBuilder = NotificationCompat.Builder(requireContext(), "goal_alerts")
             .setSmallIcon(R.drawable.arrow)
             .setContentTitle(title)
             .setContentText(message)
