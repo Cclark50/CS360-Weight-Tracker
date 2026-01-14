@@ -29,6 +29,7 @@ class GoalFragment : Fragment(){
     private var _progressEnd: Float = 0f
     private var _currProgress: Float = 0f
 
+    // https://developer.android.com/topic/libraries/view-binding
     // Using view binding to be cleaner
     private var _binding: GoalFragmentBinding? = null
     private val binding get() = _binding!!

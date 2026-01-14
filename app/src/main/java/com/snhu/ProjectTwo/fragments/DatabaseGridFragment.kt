@@ -39,6 +39,7 @@ class DatabaseGridFragment: Fragment(){
     private lateinit var _list: MutableList<UserInfo>
     private val _userId by lazy { (activity as CoreApp).getId() }
 
+    // https://developer.android.com/topic/libraries/view-binding
     // Use view binding instead of getting by id
     private var _binding: DatabaseGridRecycleFragmentBinding? = null
     private val binding get() = _binding!!
