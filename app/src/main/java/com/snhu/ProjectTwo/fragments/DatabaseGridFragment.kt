@@ -23,7 +23,6 @@ import com.snhu.ProjectTwo.utilities.WeightCardAdapter
 import com.snhu.ProjectTwo.utilities.isValidWeight
 import java.time.LocalDate
 import java.time.ZoneId
-import kotlin.math.abs
 
 
 //@Author Christian Clark
@@ -37,8 +36,8 @@ import kotlin.math.abs
 class DatabaseGridFragment: Fragment(){
 
     private lateinit var _adapter: WeightCardAdapter
-    private lateinit var _list: MutableList<UserInfo>
-    private val _userId by lazy { (activity as CoreApp).getId() }
+    private lateinit var _weightList: MutableList<UserInfo>
+    private val _userId: Long by lazy { (activity as CoreApp).getId() }
 
     // https://developer.android.com/topic/libraries/view-binding
     // Use view binding instead of getting by id
@@ -63,7 +62,7 @@ class DatabaseGridFragment: Fragment(){
     private fun initData(){
         try{
             val db = LoginDatabase(context)
-            _list = db.GetInfoListByUser(_userId)
+            _weightList = db.GetInfoListByUser(_userId)
         }catch(_: Exception){
             Toast.makeText(context, getString(R.string.could_not_get_user_data), Toast.LENGTH_LONG).show()
         }
@@ -83,30 +82,30 @@ class DatabaseGridFragment: Fragment(){
                 val currDate = System.currentTimeMillis()
                 try{
                     db.AddNewWeight(_userId, currDate, currWeight)
-                    _list = db.GetInfoListByUser(_userId)
-                    _adapter.updateData(_list)
+                    _weightList = db.GetInfoListByUser(_userId)
+                    _adapter.updateData(_weightList)
                 }catch(_: Exception){
                     Toast.makeText(context,
                         getString(R.string.could_not_add_new_weight), Toast.LENGTH_SHORT).show()
                 }
 
                 val goalWeight = db.GetGoalWeight(_userId)
-                if(_list.isEmpty()){
+                if(_weightList.isEmpty()){
                     return@setOnClickListener
                 }
-                currWeight = _list.get(0).weight
+                currWeight = _weightList.get(0).weight
                 var weightToGo = 0f
-                var alert: AlertType = AlertType.Do_Not_Send
+                var alert: AlertType = AlertType.DO_NOT_SEND
                 if(currWeight > goalWeight){
                     weightToGo = currWeight - goalWeight
                     if(weightToGo <= 10.0f){
-                        alert = AlertType.Approaching
+                        alert = AlertType.APPROACHING
                     }
                 }else if(currWeight <= goalWeight){
-                    alert = AlertType.Reached_Goal
+                    alert = AlertType.REACHED_GOAL
                 }
 
-                if(alert != AlertType.Do_Not_Send){
+                if(alert != AlertType.DO_NOT_SEND){
                     attemptSendNotification(alert, weightToGo)
                 }
 
@@ -119,7 +118,7 @@ class DatabaseGridFragment: Fragment(){
     private fun setupRecyclerView(){
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        _adapter = WeightCardAdapter(requireContext(), _list, _userId,
+        _adapter = WeightCardAdapter(requireContext(), _weightList, _userId,
             ::deleteClicked,
             ::dateClicked)
 
@@ -158,8 +157,8 @@ class DatabaseGridFragment: Fragment(){
     fun attemptSendNotification(type: AlertType, poundsRemaining: Float){
         if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED){
             when (type){
-                AlertType.Approaching -> sendNotification(getString(R.string.approaching_title), getString(R.string.approaching_message, poundsRemaining))
-                AlertType.Reached_Goal -> sendNotification(getString(R.string.reached_title), getString(R.string.reached_message))
+                AlertType.APPROACHING -> sendNotification(getString(R.string.approaching_title), getString(R.string.approaching_message, poundsRemaining))
+                AlertType.REACHED_GOAL -> sendNotification(getString(R.string.reached_title), getString(R.string.reached_message))
                 else -> return
             }
         }
@@ -180,8 +179,8 @@ class DatabaseGridFragment: Fragment(){
 
     // enum class to determine which notification to send
     enum class AlertType{
-        Approaching,
-        Reached_Goal,
-        Do_Not_Send
+        APPROACHING,
+        REACHED_GOAL,
+        DO_NOT_SEND
     }
 }
