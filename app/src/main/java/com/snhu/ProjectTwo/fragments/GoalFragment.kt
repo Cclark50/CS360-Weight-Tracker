@@ -9,6 +9,7 @@ import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.activities.CoreApp
 import com.snhu.ProjectTwo.databinding.GoalFragmentBinding
 import com.snhu.ProjectTwo.utilities.LoginDatabase
+import com.snhu.ProjectTwo.utilities.isValidWeight
 
 
 //@Author Christian Clark
@@ -42,30 +43,8 @@ class GoalFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceData: Bundle?){
         super.onViewCreated(view, savedInstanceData)
-        val db = LoginDatabase(context)
-        try{
-            val goals = db.GetGoalRow(_userId)
-            _goalWeight = goals.goal
-            _startWeight = goals.start
-        }catch (_: Exception){
-            _goalWeight = 0f
-            binding.goalWeightShow.text = getString(R.string.goal_weight_missing_or_corrupted)
-        }
-        try{
-            val list = db.GetInfoListByUser(_userId)
-            _currWeight = list.get(0).weight
-        }catch(_: Exception){
-            _currWeight = 0f
-            binding.currWeightShow.text = getString(R.string.no_current_weight_found)
-        }
 
-        if(_goalWeight > 0){
-            binding.goalWeightShow.text = getString(R.string.pounds, _goalWeight)
-        }
-        if(_currWeight > 0){
-            binding.currWeightShow.text = getString(R.string.pounds, _currWeight)
-        }
-
+        updateValues()
         updateProgress()
 
     }
@@ -94,10 +73,10 @@ class GoalFragment : Fragment(){
             _currWeight = 0f
             binding.currWeightShow.text = getString(R.string.no_current_weight_found)
         }
-        if(_goalWeight > 0){
+        if(_goalWeight.isValidWeight()){
             binding.goalWeightShow.text = getString(R.string.pounds, _goalWeight)
         }
-        if(_currWeight > 0){
+        if(_currWeight.isValidWeight()){
             binding.currWeightShow.text = getString(R.string.pounds, _currWeight)
         }
     }

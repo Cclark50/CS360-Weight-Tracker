@@ -8,7 +8,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.snhu.ProjectTwo.R
-import com.snhu.ProjectTwo.databinding.WeightDataCardBinding
 
 //@Author Christian Clark
 //@Date 1-9-26

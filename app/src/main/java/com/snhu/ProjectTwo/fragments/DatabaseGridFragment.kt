@@ -20,6 +20,7 @@ import com.snhu.ProjectTwo.databinding.DatabaseGridRecycleFragmentBinding
 import com.snhu.ProjectTwo.utilities.LoginDatabase
 import com.snhu.ProjectTwo.utilities.UserInfo
 import com.snhu.ProjectTwo.utilities.WeightCardAdapter
+import com.snhu.ProjectTwo.utilities.isValidWeight
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlin.math.abs
@@ -73,7 +74,7 @@ class DatabaseGridFragment: Fragment(){
             try{
                 var currWeight = binding.weightEntryDatabase.text.toString().toFloatOrNull()
                 binding.weightEntryDatabase.setText("")
-                if(currWeight == null || (currWeight !in 0f .. 3000f || abs(currWeight) < 0.0001f)){
+                if(currWeight == null || !currWeight.isValidWeight()){
                     Toast.makeText(context, getString(R.string.error_invalid_weight), Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
