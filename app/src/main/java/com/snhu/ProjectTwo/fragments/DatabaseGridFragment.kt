@@ -64,7 +64,7 @@ class DatabaseGridFragment: Fragment(){
             val db = LoginDatabase(context)
             _list = db.GetInfoListByUser(_userId)
         }catch(_: Exception){
-            Toast.makeText(context, "Could not get user data", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, getString(R.string.could_not_get_user_data), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -85,7 +85,8 @@ class DatabaseGridFragment: Fragment(){
                     _list = db.GetInfoListByUser(_userId)
                     _adapter.updateData(_list)
                 }catch(_: Exception){
-                    Toast.makeText(context, "Could not add new weight", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,
+                        getString(R.string.could_not_add_new_weight), Toast.LENGTH_SHORT).show()
                 }
 
                 val goalWeight = db.GetGoalWeight(_userId)

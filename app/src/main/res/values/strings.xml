@@ -41,4 +41,13 @@
     <string name="reached_title">You Reached Your Goal</string>
     <string name="reached_message">You Finally Reached your goal weight!</string>
     <string name="error_invalid_weight">Invalid Weight Entry</string>
+    <string name="missing_username_or_password">Missing Username or Password</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="something_went_wrong_accessing_the_internal_database">Something went wrong accessing the internal database</string>
+    <string name="invalid_username_or_password">Invalid Username or Password</string>
+    <string name="could_not_get_user_data">Could not get user data</string>
+    <string name="could_not_add_new_weight">Could not add new weight</string>
+    <string name="notification_permission_granted">Notification Permission Granted</string>
+    <string name="notification_permission_denied">Notification Permission Denied</string>
 </resources>

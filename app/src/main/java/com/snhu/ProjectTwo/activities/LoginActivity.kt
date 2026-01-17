@@ -74,8 +74,8 @@ class LoginActivity : AppCompatActivity() {
         // If the username or password is empty then let the user know
         if(username.isEmpty() || password.isEmpty()){
             AlertDialog.Builder(this).apply{
-                setTitle("Missing Username or Password")
-                setPositiveButton("OK", null)
+                setTitle(getString(R.string.missing_username_or_password))
+                setPositiveButton(getString(R.string.ok), null)
             }.show()
             return
         }
@@ -85,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
             setTitle("Please Enter a Goal Weight")
             val accCreate = AccountCreateInputBinding.inflate(layoutInflater)
             setView(accCreate.root)
-            setPositiveButton("OK") { dialog, _ ->
+            setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                 val goalWeightStr = accCreate.weightEntry.text.toString()
                 val currWeightStr = accCreate.currWeightEntry.text.toString()
                 try{
@@ -98,7 +98,7 @@ class LoginActivity : AppCompatActivity() {
                         ) {
                         Toast.makeText(
                             this@LoginActivity,
-                            "Invalid Weight Entered",
+                            getString(R.string.invalid_weight),
                             Toast.LENGTH_LONG
                         ).show()
                         dialog.dismiss()
@@ -111,7 +111,7 @@ class LoginActivity : AppCompatActivity() {
                     dialog.dismiss()
                 }
             }
-            setNegativeButton("Cancel", null)
+            setNegativeButton(getString(R.string.cancel), null)
         }.show()
     }
 
@@ -129,7 +129,8 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this@LoginActivity, sqlEx.toString(), Toast.LENGTH_LONG).show()
         }
         catch (ex: Exception){
-            Toast.makeText(this@LoginActivity, "Something went wrong accessing the internal database" + ex, Toast.LENGTH_LONG).show()
+            Toast.makeText(this@LoginActivity,
+                getString(R.string.something_went_wrong_accessing_the_internal_database), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -139,7 +140,7 @@ class LoginActivity : AppCompatActivity() {
 
         // if we're missing login information inform the user
         if(username.isEmpty() || password.isEmpty()){
-            Toast.makeText(this, "Username or Password is Empty", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.missing_username_or_password), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -147,14 +148,15 @@ class LoginActivity : AppCompatActivity() {
             LoginDatabase(this).use { db ->
                 val loginData = db.ConfirmLogin(username, password)
                 if(loginData == null){
-                    Toast.makeText(this@LoginActivity, "Invalid Username or Password", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity,
+                        getString(R.string.invalid_username_or_password), Toast.LENGTH_SHORT).show()
                     return
                 }
 
                 login(loginData)
             }
         }catch (ex: Exception){
-            Toast.makeText(this, "Something went wrong accessing the internal database: " + ex, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.something_went_wrong_accessing_the_internal_database), Toast.LENGTH_SHORT).show()
             Log.e("Database Login", "ex: ", ex)
         }
     }

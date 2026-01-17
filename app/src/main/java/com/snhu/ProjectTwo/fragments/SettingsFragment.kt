@@ -50,9 +50,11 @@ class SettingsFragment: Fragment(){
                 updateSwitchState()
 
                 if(isGranted){
-                    Toast.makeText(requireContext(), "Notification Permission Granted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),
+                        getString(R.string.notification_permission_granted), Toast.LENGTH_SHORT).show()
                 }else{
-                    Toast.makeText(requireContext(), "Notification Permission Denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),
+                        getString(R.string.notification_permission_denied), Toast.LENGTH_SHORT).show()
                 }
             }
             )
