@@ -45,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
         binding.checkBox.isChecked = _checkBoxStatus
 
         binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            binding.checkBox.isChecked = isChecked;
+            binding.checkBox.isChecked = isChecked
         }
 
         // if we've stored the username, set the edit text to it or an empty string
