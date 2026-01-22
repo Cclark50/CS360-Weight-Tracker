@@ -131,7 +131,8 @@ class DatabaseGridFragment: Fragment(){
         val db = LoginDatabase(context)
         db.RemoveWeightAt(info.id, _userId)
 
-        _adapter.updateData(db.GetInfoListByUser(_userId))
+        //_adapter.updateData(db.GetInfoListByUser(_userId), position)
+        _adapter.RemoveItem(position)
     }
 
     // allows the user to change the date of a weight entry
@@ -142,7 +143,8 @@ class DatabaseGridFragment: Fragment(){
                 val date: Long = LocalDate.of(year, month + 1, dayOfMonth).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
                 val db = LoginDatabase(context)
                 db.ChangeDateAt(info.id, _userId, date)
-                _adapter.updateData(db.GetInfoListByUser(_userId))
+                //_adapter.updateData(db.GetInfoListByUser(_userId), position)
+                _adapter.DateChanged(position, date)
 
             }, date.year, date.monthValue - 1, date.dayOfMonth
         ).show()

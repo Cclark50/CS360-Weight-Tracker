@@ -34,6 +34,10 @@ class WeightCardAdapter(
             _dateText.setText(item.getDateString())
             _weightText.setText(item.weight.toString())
         }
+
+        public fun UpdateWeight(newDate: String){
+            _dateText.text = newDate
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -56,5 +60,16 @@ class WeightCardAdapter(
         _items.clear()
         _items.addAll(newInfo)
         notifyDataSetChanged()
+    }
+
+    public fun RemoveItem(position: Int){
+        _items.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    public fun DateChanged(position: Int, newDate: Long){
+        val old = _items[position]
+        _items[position] = UserInfo(old.id, old.user, newDate, old.weight)
+        notifyItemChanged(position)
     }
 }
