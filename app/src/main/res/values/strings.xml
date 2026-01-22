@@ -50,4 +50,5 @@
     <string name="could_not_add_new_weight">Could not add new weight</string>
     <string name="notification_permission_granted">Notification Permission Granted</string>
     <string name="notification_permission_denied">Notification Permission Denied</string>
+    <string name="you_reached_your_goal">You Reached Your Goal!</string>
 </resources>
