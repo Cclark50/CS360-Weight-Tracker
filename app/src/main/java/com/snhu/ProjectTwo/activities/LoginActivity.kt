@@ -65,6 +65,9 @@ class LoginActivity : AppCompatActivity() {
         }
         val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+        // (Google, 2026)
+        // Google. (2026, January 19). Create a notification.
+        // Retrieved from Android Developers: https://developer.android.com/develop/ui/views/notifications/build-notification
     }
 
     fun createAccountButton(view: View){
