@@ -1,6 +1,7 @@
 package com.snhu.ProjectTwo.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import com.snhu.ProjectTwo.activities.CoreApp
 import com.snhu.ProjectTwo.databinding.GoalFragmentBinding
 import com.snhu.ProjectTwo.utilities.LoginDatabase
 import com.snhu.ProjectTwo.utilities.isValidWeight
+import kotlin.math.abs
 
 
 //@Author Christian Clark
@@ -90,7 +92,11 @@ class GoalFragment : Fragment(){
         binding.progressBar.isIndeterminate = false
         _currProgress = (if (_currProgress < 0) 0 else _currProgress) as Float
         binding.progressBar.setProgress(_currProgress.toInt(), false)
-        binding.progressText.text = getString(R.string.remaining_pounds, remaining)
+        if(remaining < 0f){
+            binding.progressText.text = getString(R.string.you_reached_your_goal)
+        }else{
+            binding.progressText.text = getString(R.string.remaining_pounds, remaining)
+        }
     }
 
     override fun onDestroyView() {
