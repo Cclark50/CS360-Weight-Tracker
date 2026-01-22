@@ -43,7 +43,10 @@ class DatabaseGridFragment: Fragment(){
     // Use view binding instead of getting by id
     private var _binding: DatabaseGridRecycleFragmentBinding? = null
     private val binding get() = _binding!!
+    // (Google, 2025)
     private var notificationIdCurrent: Int = 0
+    // Google. (2025, February 10). View binding.
+    // Retrieved from Android Developers: https://developer.android.com/topic/libraries/view-binding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceData: Bundle?): View {
         _binding = DatabaseGridRecycleFragmentBinding.inflate(inflater, container, false)
