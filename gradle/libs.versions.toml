@@ -9,7 +9,7 @@ constraintlayout = "2.2.1"
 recyclerview = "1.4.0"
 kotlin = "2.3.0"
 coreKtx = "1.17.0"
-vico = "3.0.0-beta.2"
+vico = "3.0.0-beta.3"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }

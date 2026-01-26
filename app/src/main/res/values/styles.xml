@@ -11,4 +11,15 @@
         <item name="android:windowEnterAnimation">@anim/nav_default_enter_anim</item>
         <item name="android:windowExitAnimation">@anim/nav_default_exit_anim</item>
     </style>
+
+    <style name="chart_style">
+        <item name="layers">line</item>
+<!--        <item name="showStartAxis">true</item>-->
+<!--        <item name="showBottomAxis">true</item>-->
+        <item name="bottomAxisStyle">@style/BottomAxisStyle</item>
+    </style>
+
+    <style name="BottomAxisStyle">
+
+    </style>
 </resources>

@@ -27,4 +27,10 @@
         android:name="com.snhu.ProjectTwo.fragments.SettingsFragment"
         android:label="Settings"
         />
+
+    <fragment
+        android:id="@+id/navigation_graph"
+        android:name="com.snhu.ProjectTwo.fragments.GraphFragment"
+        android:label="Graph"
+        />
 </navigation>
