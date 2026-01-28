@@ -100,9 +100,11 @@ class GraphFragment: Fragment() {
         }
 
         // O(n) transformation of the weights from our data base into an entry list
-        val entries = _weightPoints.map{ point ->
+        // make sure to reverse the list so that when tying dates to indices
+        // that it still shows from left to right on the graph
+        val entries = _weightPoints.reversed().mapIndexed{ index, point ->
             Entry(
-                (point.date / (1000 * 60 * 60 * 24)).toFloat(),
+                index.toFloat(),
                 point.weight
             )
         }
@@ -127,11 +129,20 @@ class GraphFragment: Fragment() {
         // From ValueFormatter and has better control over how i show the date
         binding.weightChart.xAxis.valueFormatter = object : ValueFormatter(){
             private val dateFormatter = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
+            // because of a bug where if values dates get too far apart we have to
+            // map graph points to dates instead of calculating dates directly
             override fun getFormattedValue(value: Float): String? {
-                val millis = (value * 1000 * 60 * 60 * 24).toLong()
-                return dateFormatter.format(Date(millis))
+                val index = value.toInt()
+                // need to reverse the graph one more time
+                val reversed = _weightPoints.reversed()
+                if(index in reversed.indices){
+                    return dateFormatter.format(Date(_weightPoints[index].date))
+                }
+                return ""
             }
         }
+
+
 
         // Yaxis settings
         binding.weightChart.axisLeft.apply{

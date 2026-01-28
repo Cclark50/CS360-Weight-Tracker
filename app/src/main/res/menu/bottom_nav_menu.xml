@@ -9,14 +9,14 @@
         android:icon="@drawable/add_icon"
         android:title="Add" />
 
+    <item
+        android:id="@+id/navigation_graph"
+        android:icon="@drawable/graph"
+        android:title="Graph"
+        />
+
     <item android:id="@+id/navigation_settings"
         android:icon="@drawable/database_icon"
         android:title="Settings" />
-
-    <item
-        android:id="@+id/navigation_graph"
-        android:icon="@drawable/alarm_icon"
-        android:title="Graph"
-        />
 
 </menu>
