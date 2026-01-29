@@ -50,15 +50,14 @@ class GraphFragment: Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getWeightPoints()
-        val sb = StringBuilder()
-        for (weight: WeightPoint in _weightPoints){
-            val str: String = "${weight.date}, ${weight.weight}\n"
-            sb.append(str)
-        }
-        Log.d("GRAPH FRAGMENT", "weights: " + sb.toString())
         createChart()
     }
 
@@ -74,6 +73,7 @@ class GraphFragment: Fragment() {
 
     private fun createChart(){
 
+        // if the weights are empty then let the user know
         if(_weightPoints.isEmpty()){
             binding.weightChart.setNoDataText(getString(R.string.no_data_available))
             binding.weightChart.setNoDataTextColor(Color.BLACK)
