@@ -100,13 +100,13 @@ class GoalFragment : Fragment(){
     // Update the progress bar to represent the progress toward a users' goal
     fun updateProgress(){
         if (!_goalWeight.isValidWeight()){
-            binding.progressText.text = "Goal Weight Not Found"
+            binding.progressText.text = getString(R.string.goal_weight_not_found)
             binding.progressBar.isIndeterminate = false
             binding.progressBar.setProgress(0)
             return
         }
         if(!_currWeight.isValidWeight()){
-            binding.progressText.text = "No weights in database to compare to"
+            binding.progressText.text = getString(R.string.no_weights_in_database_to_compare_to)
             binding.progressBar.isIndeterminate = false
             binding.progressBar.setProgress(0)
             return

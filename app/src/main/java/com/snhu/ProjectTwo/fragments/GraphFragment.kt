@@ -65,7 +65,7 @@ class GraphFragment: Fragment() {
                 getWeightPoints()
                 createChart()
             }catch (ex: Exception){
-                binding.weightChart.setNoDataText("Could not find a start and goal weight.")
+                binding.weightChart.setNoDataText(getString(R.string.could_not_find_a_start_and_goal_weight))
                 binding.weightChart.setNoDataTextColor(Color.BLACK)
                 binding.weightChart.getPaint(Chart.PAINT_INFO).textSize = 48f
                 return@launch
