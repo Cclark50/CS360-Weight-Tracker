@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import com.snhu.ProjectTwo.utilities.*;
 
 import org.mindrot.jbcrypt.BCrypt;
 
