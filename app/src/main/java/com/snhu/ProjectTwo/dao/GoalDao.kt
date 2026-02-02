@@ -5,6 +5,8 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.snhu.ProjectTwo.entities.GoalEntity
 
+//@Author Christian Clark
+//@Date 2-2-26
 // GoalDao gives us functions to interact with the goals table in our database
 
 @Dao

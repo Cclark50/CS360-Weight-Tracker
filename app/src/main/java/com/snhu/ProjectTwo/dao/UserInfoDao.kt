@@ -10,6 +10,9 @@ import com.snhu.ProjectTwo.entities.UserInfoEntity
 
 @Dao
 interface UserInfoDao {
+
+    //@Author Christian Clark
+    //@Date 2-2-26
     // adds a weight to the table
     @Insert
     fun AddNewWeight(info: UserInfoEntity): Long

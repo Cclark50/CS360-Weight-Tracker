@@ -6,6 +6,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+//@Author Christian Clark
+//@Date 2-2-26
 // GoalEntity gives us the schema for the goals table
 // Also provides a data class we can use to reference a row of that table
 

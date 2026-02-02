@@ -11,6 +11,9 @@ import com.snhu.ProjectTwo.entities.GoalEntity
 import com.snhu.ProjectTwo.entities.LoginEntity
 import com.snhu.ProjectTwo.entities.UserInfoEntity
 
+//@Author Christian Clark
+//@Date 2-2-26
+// The database class where we can retrieve Daos from get the singleton instance of the database
 @Database(
     entities = [LoginEntity::class, UserInfoEntity::class, GoalEntity::class],
     version = 2

@@ -5,6 +5,8 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.snhu.ProjectTwo.entities.LoginEntity
 
+//@Author Christian Clark
+//@Date 2-2-26
 // LoginDao gives functions to interact with the login table in the database
 
 @Dao

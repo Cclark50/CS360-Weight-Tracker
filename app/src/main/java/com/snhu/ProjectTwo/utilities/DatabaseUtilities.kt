@@ -8,6 +8,8 @@ import com.snhu.ProjectTwo.entities.LoginEntity
 import com.snhu.ProjectTwo.entities.UserInfoEntity
 import org.mindrot.jbcrypt.BCrypt
 
+//@Author Christian Clark
+//@Date 2-2-26
 // Utilities file for extra functions relating to accessing the database
 
 suspend fun ConfirmLogin(username: String, unhashedPassword: String, loginDao: LoginDao): LoginEntity?{
