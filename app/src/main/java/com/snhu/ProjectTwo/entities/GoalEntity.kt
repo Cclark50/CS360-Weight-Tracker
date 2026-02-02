@@ -6,6 +6,9 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+// GoalEntity gives us the schema for the goals table
+// Also provides a data class we can use to reference a row of that table
+
 @Entity(
     tableName = "goalTable",
     foreignKeys = [

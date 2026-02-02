@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.snhu.ProjectTwo.R
@@ -22,8 +21,6 @@ import com.snhu.ProjectTwo.databinding.DatabaseGridRecycleFragmentBinding
 import com.snhu.ProjectTwo.entities.GoalEntity
 import com.snhu.ProjectTwo.entities.UserInfoEntity
 import com.snhu.ProjectTwo.utilities.AddNewWeight
-import com.snhu.ProjectTwo.utilities.LoginDatabase
-import com.snhu.ProjectTwo.utilities.UserInfo
 import com.snhu.ProjectTwo.utilities.WeightCardAdapter
 import com.snhu.ProjectTwo.utilities.WeightDatabase
 import com.snhu.ProjectTwo.utilities.isValidWeight

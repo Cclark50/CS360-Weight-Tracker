@@ -2,7 +2,6 @@ package com.snhu.ProjectTwo.fragments
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,12 +16,9 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.databinding.GraphFragmentBinding
-import com.snhu.ProjectTwo.utilities.UserInfo
 import com.snhu.ProjectTwo.activities.CoreApp
 import com.snhu.ProjectTwo.entities.GoalEntity
 import com.snhu.ProjectTwo.entities.UserInfoEntity
-import com.snhu.ProjectTwo.utilities.GoalRow
-import com.snhu.ProjectTwo.utilities.LoginDatabase
 import com.snhu.ProjectTwo.utilities.WeightDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

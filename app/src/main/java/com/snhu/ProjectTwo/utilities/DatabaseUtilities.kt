@@ -8,6 +8,7 @@ import com.snhu.ProjectTwo.entities.LoginEntity
 import com.snhu.ProjectTwo.entities.UserInfoEntity
 import org.mindrot.jbcrypt.BCrypt
 
+// Utilities file for extra functions relating to accessing the database
 
 suspend fun ConfirmLogin(username: String, unhashedPassword: String, loginDao: LoginDao): LoginEntity?{
     val login = loginDao.GetUserLoginByUsername(username) ?: return null

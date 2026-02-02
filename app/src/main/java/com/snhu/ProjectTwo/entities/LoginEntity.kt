@@ -4,6 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+// LoginEntity gives us the schema for the login table
+// Also provides a data class we can use to reference a row of that table
+
 @Entity(
     tableName = "login"
 )

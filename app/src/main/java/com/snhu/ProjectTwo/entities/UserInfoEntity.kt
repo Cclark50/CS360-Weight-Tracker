@@ -9,6 +9,9 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+// UserInfoEntity gives us the schema for the userinfo table
+// Also provides a data class we can use to reference a row of that table
+
 @Entity(
     tableName = "userInfo",
     foreignKeys = [
