@@ -1,7 +1,6 @@
 package com.snhu.ProjectTwo.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +9,11 @@ import androidx.lifecycle.lifecycleScope
 import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.activities.CoreApp
 import com.snhu.ProjectTwo.databinding.GoalFragmentBinding
-import com.snhu.ProjectTwo.utilities.LoginDatabase
 import com.snhu.ProjectTwo.utilities.WeightDatabase
 import com.snhu.ProjectTwo.utilities.isValidWeight
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.abs
 
 
 //@Author Christian Clark
@@ -72,20 +69,25 @@ class GoalFragment : Fragment(){
             val (goals, weight) = withContext(Dispatchers.IO) {
                 val db = WeightDatabase.getInstance(requireContext())
                 val goal = db.goalDao().GetGoalRow(_userId)
-                val weight = db.userInfoDao().GetInfoListByUser(_userId).get(0)
+                val weight = db.userInfoDao().GetLatestWeight(_userId)
                 Pair(goal, weight)
             }
             if (goals == null) {
                 _goalWeight = 0f
                 binding.goalWeightShow.text = getString(R.string.goal_weight_missing_or_corrupted)
             }
-            _goalWeight = goals.goal
-            _startWeight = goals.start
+            else{
+
+                _goalWeight = goals.goal
+                _startWeight = goals.start
+            }
             if (weight == null){
                 _currWeight = 0f
                 binding.currWeightShow.text = getString(R.string.no_current_weight_found)
             }
-            _currWeight = weight.weight
+            else{
+                _currWeight = weight.weight
+            }
             if (_goalWeight.isValidWeight()) {
                 binding.goalWeightShow.text = getString(R.string.pounds, _goalWeight)
             }
@@ -97,6 +99,18 @@ class GoalFragment : Fragment(){
 
     // Update the progress bar to represent the progress toward a users' goal
     fun updateProgress(){
+        if (!_goalWeight.isValidWeight()){
+            binding.progressText.text = "Goal Weight Not Found"
+            binding.progressBar.isIndeterminate = false
+            binding.progressBar.setProgress(0)
+            return
+        }
+        if(!_currWeight.isValidWeight()){
+            binding.progressText.text = "No weights in database to compare to"
+            binding.progressBar.isIndeterminate = false
+            binding.progressBar.setProgress(0)
+            return
+        }
         _progressEnd = _startWeight - _goalWeight // 300 - 100 = 200
         val journey = _startWeight - _currWeight // 300 - 250 = 50
         _currProgress = (journey / _progressEnd) * 100f // 50/200 = 25%

@@ -1,6 +1,5 @@
 package com.snhu.ProjectTwo.utilities
 
-import android.util.Log
 import com.snhu.ProjectTwo.dao.GoalDao
 import com.snhu.ProjectTwo.dao.LoginDao
 import com.snhu.ProjectTwo.dao.UserInfoDao
@@ -17,7 +16,7 @@ suspend fun ConfirmLogin(username: String, unhashedPassword: String, loginDao: L
 }
 
 suspend fun AddNewUser(username: String, password: String, goalWeight: Float, loginDao: LoginDao): Long{
-    if (!goalWeight.isValidWeight()) throw Exception("Goal Weight is not valid");
+    if (!goalWeight.isValidWeight()) throw Exception("Goal Weight is not valid")
     val hashedPw = BCrypt.hashpw(password, BCrypt.gensalt(12))
     val login = LoginEntity(
         username = username,

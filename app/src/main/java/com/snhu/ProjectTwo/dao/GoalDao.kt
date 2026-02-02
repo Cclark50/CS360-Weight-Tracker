@@ -12,5 +12,5 @@ interface GoalDao {
     fun SetGoal(goal: GoalEntity): Long
 
     @Query("SELECT * FROM goalTable WHERE _id = :id LIMIT 1")
-    fun GetGoalRow(id: Long): GoalEntity
+    fun GetGoalRow(id: Long): GoalEntity?
 }

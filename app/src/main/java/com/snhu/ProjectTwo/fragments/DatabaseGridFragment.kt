@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.activities.CoreApp
 import com.snhu.ProjectTwo.databinding.DatabaseGridRecycleFragmentBinding
+import com.snhu.ProjectTwo.entities.GoalEntity
 import com.snhu.ProjectTwo.entities.UserInfoEntity
 import com.snhu.ProjectTwo.utilities.AddNewWeight
 import com.snhu.ProjectTwo.utilities.LoginDatabase
@@ -107,11 +108,16 @@ class DatabaseGridFragment: Fragment(){
                             getString(R.string.could_not_add_new_weight), Toast.LENGTH_SHORT).show()
                     }
 
+                    var goalWeightRow: GoalEntity? = null
                     var goalWeight: Float? = null
                     try{
-                       goalWeight = withContext(Dispatchers.IO){
-                            WeightDatabase.getInstance(requireContext()).goalDao().GetGoalRow(_userId).goal
-                       }
+                        goalWeightRow = withContext(Dispatchers.IO){
+                            WeightDatabase.getInstance(requireContext()).goalDao().GetGoalRow(_userId)
+                        }
+                        if(goalWeightRow == null){
+                            throw Exception()
+                        }
+                        goalWeight = goalWeightRow.goal
                     }catch (_: Exception){
                         Toast.makeText(context,
                             getString(R.string.goal_weight_could_not_be_accessed), Toast.LENGTH_SHORT).show()

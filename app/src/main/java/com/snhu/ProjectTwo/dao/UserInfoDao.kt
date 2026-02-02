@@ -22,4 +22,7 @@ interface UserInfoDao {
 
     @Query("SELECT * FROM userInfo WHERE _id = :id LIMIT 1")
     fun GetInfoById(id: Long): UserInfoEntity?
+
+    @Query("SELECT * FROM userInfo WHERE user = :user ORDER BY date DESC")
+    fun GetLatestWeight(user: Long): UserInfoEntity?
 }

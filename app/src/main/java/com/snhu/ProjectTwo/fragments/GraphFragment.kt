@@ -43,7 +43,7 @@ class GraphFragment: Fragment() {
     private val binding get() = _binding!!
 
     private val _userId: Long by lazy { (activity as? CoreApp)?.getId() ?: -1L }
-    private lateinit var _goalRow: GoalEntity
+    private var _goalRow: GoalEntity? = null
 
     private lateinit var _weightList: List<UserInfoEntity>
     private lateinit var _weightPoints: List<WeightPoint>
@@ -65,8 +65,15 @@ class GraphFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch{
-            getWeightPoints()
-            createChart()
+            try{
+                getWeightPoints()
+                createChart()
+            }catch (ex: Exception){
+                binding.weightChart.setNoDataText("Could not find a start and goal weight.")
+                binding.weightChart.setNoDataTextColor(Color.BLACK)
+                binding.weightChart.getPaint(Chart.PAINT_INFO).textSize = 48f
+                return@launch
+            }
         }
     }
 
@@ -75,6 +82,9 @@ class GraphFragment: Fragment() {
             val db = WeightDatabase.getInstance(requireContext())
             _weightList = db.userInfoDao().GetInfoListByUser(_userId)
             _goalRow = db.goalDao().GetGoalRow(_userId)
+        }
+        if(_goalRow == null){
+            throw Exception("No goal row exists")
         }
         // O(n) transformation into a dataset that is better for a chart
         _weightPoints = _weightList.map{info ->
@@ -165,7 +175,7 @@ class GraphFragment: Fragment() {
                 }
             }
 
-            addLimitLine(LimitLine(_goalRow.start, "Start").apply {
+            addLimitLine(LimitLine(_goalRow!!.start, "Start").apply {
                 lineColor = Color.RED
                 lineWidth = 2f
                 textColor = Color.RED
@@ -174,7 +184,7 @@ class GraphFragment: Fragment() {
                 enableDashedLine(10f, 5f, 0f)
             })
 
-            addLimitLine(LimitLine(_goalRow.goal, "Goal").apply {
+            addLimitLine(LimitLine(_goalRow!!.goal, "Goal").apply {
                 lineColor = Color.GREEN
                 lineWidth = 2f
                 textColor = Color.GREEN
