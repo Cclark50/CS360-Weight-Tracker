@@ -1,22 +1,25 @@
 package com.snhu.ProjectTwo.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.snhu.ProjectTwo.entities.UserInfoEntity
 
 @Dao
 interface UserInfoDao {
     @Insert
-    fun AddNewWeight(id: Long, date: Long, weight: Float)
+    fun AddNewWeight(info: UserInfoEntity): Long
 
     @Query("SELECT * FROM userInfo WHERE user = :user")
-    fun GetInfoListByUser(user: Long)
+    fun GetInfoListByUser(user: Long): List<UserInfoEntity>
 
-    @Delete
+    @Query("DELETE FROM userInfo WHERE _id = :id")
     fun RemoveWeightAt(id: Long)
 
     @Update
-    fun ChangeDateAt(id: Long, user: Long, date: Long)
+    fun ChangeDateAt(info: UserInfoEntity)
+
+    @Query("SELECT * FROM userInfo WHERE _id = :id LIMIT 1")
+    fun GetInfoById(id: Long)
 }

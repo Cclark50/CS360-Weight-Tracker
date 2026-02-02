@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
 data class LoginEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
-    val uid: Long,
+    val uid: Long = 0,
     @ColumnInfo(name = "username")
     val username: String,
     @ColumnInfo(name = "password")

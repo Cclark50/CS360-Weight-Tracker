@@ -21,7 +21,7 @@ import androidx.room.PrimaryKey
 data class UserInfoEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
-    val uid: Long,
+    val uid: Long = 0,
     @ColumnInfo(name = "user")
     val user: Long,
     @ColumnInfo(name = "date")

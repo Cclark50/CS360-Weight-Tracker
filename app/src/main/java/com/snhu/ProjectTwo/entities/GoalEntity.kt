@@ -21,13 +21,11 @@ import androidx.room.PrimaryKey
 data class GoalEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
-    val uid: Long,
+    val uid: Long = 0,
     @ColumnInfo(name = "user")
     val user: Long,
     @ColumnInfo(name = "start")
     val start: Float,
-    @ColumnInfo(name = "weight")
-    val weight: Float,
-    @ColumnInfo(name = "date")
-    val date: Long
+    @ColumnInfo(name = "goal")
+    val goal: Float,
 )
