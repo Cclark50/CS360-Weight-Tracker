@@ -20,6 +20,7 @@ import com.snhu.ProjectTwo.databinding.LoginBinding
 import com.snhu.ProjectTwo.entities.LoginEntity
 import com.snhu.ProjectTwo.utilities.AddNewUser
 import com.snhu.ProjectTwo.utilities.AddNewWeight
+import com.snhu.ProjectTwo.utilities.ConfirmLogin
 import com.snhu.ProjectTwo.utilities.SetGoal
 import com.snhu.ProjectTwo.utilities.WeightDatabase
 import kotlinx.coroutines.Dispatchers
@@ -165,7 +166,7 @@ class LoginActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 val loginData = withContext(Dispatchers.IO){
                     val db = WeightDatabase.getInstance(applicationContext)
-                    db.loginDao().GetUserLoginByUsername(username)
+                    ConfirmLogin(username,password, db.loginDao())
                 }
                 if(loginData == null){
                     Toast.makeText(this@LoginActivity,
