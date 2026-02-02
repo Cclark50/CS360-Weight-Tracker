@@ -13,14 +13,22 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.activities.CoreApp
 import com.snhu.ProjectTwo.databinding.DatabaseGridRecycleFragmentBinding
+import com.snhu.ProjectTwo.entities.UserInfoEntity
+import com.snhu.ProjectTwo.utilities.AddNewWeight
 import com.snhu.ProjectTwo.utilities.LoginDatabase
 import com.snhu.ProjectTwo.utilities.UserInfo
 import com.snhu.ProjectTwo.utilities.WeightCardAdapter
+import com.snhu.ProjectTwo.utilities.WeightDatabase
 import com.snhu.ProjectTwo.utilities.isValidWeight
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -36,7 +44,7 @@ import java.time.ZoneId
 class DatabaseGridFragment: Fragment(){
 
     private lateinit var _adapter: WeightCardAdapter
-    private lateinit var _weightList: MutableList<UserInfo>
+    private lateinit var _weightList: MutableList<UserInfoEntity>
     private val _userId: Long by lazy { (activity as CoreApp).getId() }
 
     // https://developer.android.com/topic/libraries/view-binding
@@ -56,65 +64,88 @@ class DatabaseGridFragment: Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initData()
+        lifecycleScope.launch {
+            initData()
 
-        setupRecyclerView()
-        setupAddButton()
+            setupRecyclerView()
+            setupAddButton()
+        }
     }
 
-    private fun initData(){
+    suspend private fun initData(){
         try{
-            val db = LoginDatabase(context)
-            _weightList = db.GetInfoListByUser(_userId)
+            withContext(Dispatchers.IO){
+                val db = WeightDatabase.getInstance(requireContext()).userInfoDao()
+                _weightList = db.GetInfoListByUser(_userId).toMutableList()
+            }
         }catch(_: Exception){
             Toast.makeText(context, getString(R.string.could_not_get_user_data), Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun setupAddButton(){
+    suspend private fun setupAddButton(){
         binding.weightAddButton.setOnClickListener { _ ->
-            try{
-                var currWeight = binding.weightEntryDatabase.text.toString().toFloatOrNull()
-                binding.weightEntryDatabase.setText("")
-                if(currWeight == null || !currWeight.isValidWeight()){
-                    Toast.makeText(context, getString(R.string.error_invalid_weight), Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-
-                val db = LoginDatabase(context)
-                val currDate = System.currentTimeMillis()
+            lifecycleScope.launch {
                 try{
-                    db.AddNewWeight(_userId, currDate, currWeight)
-                    _weightList = db.GetInfoListByUser(_userId)
-                    _adapter.updateData(_weightList)
-                }catch(_: Exception){
-                    Toast.makeText(context,
-                        getString(R.string.could_not_add_new_weight), Toast.LENGTH_SHORT).show()
-                }
-
-                val goalWeight = db.GetGoalWeight(_userId)
-                if(_weightList.isEmpty()){
-                    return@setOnClickListener
-                }
-                currWeight = _weightList.get(0).weight
-                var weightToGo = 0f
-                var alert: AlertType = AlertType.DO_NOT_SEND
-                if(currWeight > goalWeight){
-                    weightToGo = currWeight - goalWeight
-                    if(weightToGo <= 10.0f){
-                        alert = AlertType.APPROACHING
+                    var currWeight = binding.weightEntryDatabase.text.toString().toFloatOrNull()
+                    binding.weightEntryDatabase.setText("")
+                    if(currWeight == null || !currWeight.isValidWeight()){
+                        Toast.makeText(context, getString(R.string.error_invalid_weight), Toast.LENGTH_SHORT).show()
+                        return@launch
                     }
-                }else if(currWeight <= goalWeight){
-                    alert = AlertType.REACHED_GOAL
+
+                    val currDate = System.currentTimeMillis()
+                    try{
+                        withContext(Dispatchers.IO){
+                            val db = WeightDatabase.getInstance(requireContext());
+                            AddNewWeight(_userId, currDate, currWeight, db.userInfoDao())
+                            _weightList = db.userInfoDao().GetInfoListByUser(_userId).toMutableList()
+                            _adapter.updateData(_weightList)
+                        }
+                    }catch (_: Exception){
+                        Toast.makeText(context,
+                            getString(R.string.could_not_add_new_weight), Toast.LENGTH_SHORT).show()
+                    }
+
+                    var goalWeight: Float? = null
+                    try{
+                       goalWeight = withContext(Dispatchers.IO){
+                            WeightDatabase.getInstance(requireContext()).goalDao().GetGoalRow(_userId).goal
+                       }
+                    }catch (_: Exception){
+                        Toast.makeText(context,
+                            getString(R.string.goal_weight_could_not_be_accessed), Toast.LENGTH_SHORT).show()
+                    }
+                    if (goalWeight == null){
+                        Toast.makeText(context, getString(R.string.goal_weight_could_not_be_accessed),
+                            Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+                    if(_weightList.isEmpty()){
+                        return@launch
+                    }
+                    currWeight = _weightList.get(0).weight
+                    var weightToGo = 0f
+                    var alert: AlertType = AlertType.DO_NOT_SEND
+                    if(currWeight > goalWeight){
+                        weightToGo = currWeight - goalWeight
+                        if(weightToGo <= 10.0f){
+                            alert = AlertType.APPROACHING
+                        }
+                    }else if(currWeight <= goalWeight){
+                        alert = AlertType.REACHED_GOAL
+                    }
+
+                    if(alert != AlertType.DO_NOT_SEND){
+                        attemptSendNotification(alert, weightToGo)
+                    }
+
+                }catch (_: Exception){
+                    Toast.makeText(requireContext(), getString(R.string.error_invalid_weight), Toast.LENGTH_SHORT).show()
                 }
 
-                if(alert != AlertType.DO_NOT_SEND){
-                    attemptSendNotification(alert, weightToGo)
-                }
-
-            }catch (_: Exception){
-                Toast.makeText(requireContext(), getString(R.string.error_invalid_weight), Toast.LENGTH_SHORT).show()
             }
+
         }
     }
 
@@ -130,22 +161,30 @@ class DatabaseGridFragment: Fragment(){
     }
 
     // removes an entry from the database when the delete button is tapped
-    fun deleteClicked(info: UserInfo, position: Int){
-        val db = LoginDatabase(context)
-        db.RemoveWeightAt(info.id, _userId)
-
-        _adapter.RemoveItem(position)
+    fun deleteClicked(info: UserInfoEntity, position: Int){
+        lifecycleScope.launch {
+           withContext(Dispatchers.IO){
+               val db = WeightDatabase.getInstance(requireContext()).userInfoDao()
+               db.RemoveWeightAt(info.uid)
+           }
+            _adapter.RemoveItem(position)
+        }
     }
 
-    // allows the user to change the date of a weight entry
-    fun dateClicked(info: UserInfo, position: Int){
+    fun dateClicked(info: UserInfoEntity, position: Int){
         val date = LocalDate.now()
         DatePickerDialog(
             requireContext(), { _, year, month, dayOfMonth ->
-                val date: Long = LocalDate.of(year, month + 1, dayOfMonth).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                val db = LoginDatabase(context)
-                db.ChangeDateAt(info.id, _userId, date)
-                _adapter.updateData(db.GetInfoListByUser(_userId))
+                lifecycleScope.launch {
+                    val date: Long = LocalDate.of(year, month + 1, dayOfMonth).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    val list = withContext(Dispatchers.IO){
+                        val db = WeightDatabase.getInstance(requireContext()).userInfoDao()
+                        val copy = info.copy(date = date)
+                        db.ChangeDateAt(copy)
+                        db.GetInfoListByUser(_userId)
+                    }
+                    _adapter.updateData(list)
+                }
 
             }, date.year, date.monthValue - 1, date.dayOfMonth
         ).show()

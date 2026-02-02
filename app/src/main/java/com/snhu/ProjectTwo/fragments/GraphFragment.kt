@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
@@ -18,8 +19,14 @@ import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.databinding.GraphFragmentBinding
 import com.snhu.ProjectTwo.utilities.UserInfo
 import com.snhu.ProjectTwo.activities.CoreApp
+import com.snhu.ProjectTwo.entities.GoalEntity
+import com.snhu.ProjectTwo.entities.UserInfoEntity
 import com.snhu.ProjectTwo.utilities.GoalRow
 import com.snhu.ProjectTwo.utilities.LoginDatabase
+import com.snhu.ProjectTwo.utilities.WeightDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -36,9 +43,9 @@ class GraphFragment: Fragment() {
     private val binding get() = _binding!!
 
     private val _userId: Long by lazy { (activity as? CoreApp)?.getId() ?: -1L }
-    private lateinit var _goalRow: GoalRow
+    private lateinit var _goalRow: GoalEntity
 
-    private lateinit var _weightList: List<UserInfo>
+    private lateinit var _weightList: List<UserInfoEntity>
     private lateinit var _weightPoints: List<WeightPoint>
 
     override fun onCreateView(
@@ -57,14 +64,18 @@ class GraphFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getWeightPoints()
-        createChart()
+        lifecycleScope.launch{
+            getWeightPoints()
+            createChart()
+        }
     }
 
-    fun getWeightPoints(){
-        val db = LoginDatabase(requireContext())
-        _weightList = db.GetInfoListByUser(_userId)
-        _goalRow = db.GetGoalRow(_userId)
+    suspend fun getWeightPoints(){
+        withContext(Dispatchers.IO){
+            val db = WeightDatabase.getInstance(requireContext())
+            _weightList = db.userInfoDao().GetInfoListByUser(_userId)
+            _goalRow = db.goalDao().GetGoalRow(_userId)
+        }
         // O(n) transformation into a dataset that is better for a chart
         _weightPoints = _weightList.map{info ->
             WeightPoint(info.date, info.weight)

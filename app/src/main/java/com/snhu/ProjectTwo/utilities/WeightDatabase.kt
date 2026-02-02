@@ -13,7 +13,7 @@ import com.snhu.ProjectTwo.entities.UserInfoEntity
 
 @Database(
     entities = [LoginEntity::class, UserInfoEntity::class, GoalEntity::class],
-    version = 1
+    version = 2
 )
 abstract class WeightDatabase: RoomDatabase() {
 
@@ -34,7 +34,7 @@ abstract class WeightDatabase: RoomDatabase() {
                     context.applicationContext,
                     WeightDatabase::class.java,
                     "userLogins.db"
-                ).build().also {INSTANCE = it}
+                ).fallbackToDestructiveMigration().build().also {INSTANCE = it}
             }
         }
     }

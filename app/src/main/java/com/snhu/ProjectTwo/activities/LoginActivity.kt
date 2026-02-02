@@ -13,11 +13,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.databinding.AccountCreateInputBinding
-import com.snhu.ProjectTwo.utilities.LoginDatabase
 import kotlin.math.abs
 import androidx.core.content.edit
+import androidx.lifecycle.lifecycleScope
 import com.snhu.ProjectTwo.databinding.LoginBinding
-import com.snhu.ProjectTwo.utilities.UserLogin
+import com.snhu.ProjectTwo.entities.LoginEntity
+import com.snhu.ProjectTwo.utilities.AddNewUser
+import com.snhu.ProjectTwo.utilities.AddNewWeight
+import com.snhu.ProjectTwo.utilities.SetGoal
+import com.snhu.ProjectTwo.utilities.WeightDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 //@Author Christian Clark
@@ -121,17 +128,24 @@ class LoginActivity : AppCompatActivity() {
     fun createAccount(username: String, password :String, goalWeight: Float, currWeight: Float){
         try{
             // creates database values for all required information
-            LoginDatabase(this).use{ db ->
-                val currUser = db.AddNewUser(username, password, goalWeight)
-                db.SetGoal(currUser, currWeight, goalWeight)
-                db.AddNewWeight(currUser, System.currentTimeMillis(), currWeight)
+            lifecycleScope.launch(Dispatchers.IO) {
+                val db = WeightDatabase.getInstance(applicationContext)
+                val currUser = AddNewUser(username, password, goalWeight, db.loginDao())
+                SetGoal(currUser, currWeight, goalWeight, db.goalDao())
+                AddNewWeight(currUser, System.currentTimeMillis(), currWeight, db.userInfoDao())
             }
+            //LoginDatabase(this).use{ db ->
+                //val currUser = db.AddNewUser(username, password, goalWeight)
+                //db.SetGoal(currUser, currWeight, goalWeight)
+                //db.AddNewWeight(currUser, System.currentTimeMillis(), currWeight)
+            //}
         }
         catch(sqlEx: SQLiteException)
         {
             Toast.makeText(this@LoginActivity, sqlEx.toString(), Toast.LENGTH_LONG).show()
         }
         catch (ex: Exception){
+            Log.d("Create Account EX", "${ex}")
             Toast.makeText(this@LoginActivity,
                 getString(R.string.something_went_wrong_accessing_the_internal_database), Toast.LENGTH_LONG).show()
         }
@@ -148,14 +162,16 @@ class LoginActivity : AppCompatActivity() {
         }
 
         try{
-            LoginDatabase(this).use { db ->
-                val loginData = db.ConfirmLogin(username, password)
+            lifecycleScope.launch {
+                val loginData = withContext(Dispatchers.IO){
+                    val db = WeightDatabase.getInstance(applicationContext)
+                    db.loginDao().GetUserLoginByUsername(username)
+                }
                 if(loginData == null){
                     Toast.makeText(this@LoginActivity,
                         getString(R.string.invalid_username_or_password), Toast.LENGTH_SHORT).show()
-                    return
+                    return@launch
                 }
-
                 login(loginData)
             }
         }catch (ex: Exception){
@@ -165,7 +181,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // Logs into the application
-    fun login(loginData: UserLogin){
+    fun login(loginData: LoginEntity){
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         // if we have the remember me box checked store the username
         if(binding.checkBox.isChecked){
@@ -182,7 +198,7 @@ class LoginActivity : AppCompatActivity() {
         }
         // start the next activity
         startActivity(Intent(this@LoginActivity, CoreApp::class.java).apply{
-            putExtra("UserId", loginData.id)
+            putExtra("UserId", loginData.uid)
         })
     }
 

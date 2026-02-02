@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.snhu.ProjectTwo.R
+import com.snhu.ProjectTwo.entities.UserInfoEntity
 
 //@Author Christian Clark
 //@Date 1-9-26
@@ -19,10 +20,10 @@ import com.snhu.ProjectTwo.R
 
 class WeightCardAdapter(
     private val _context: Context,
-    private var _items: MutableList<UserInfo>,
+    private var _items: MutableList<UserInfoEntity>,
     private val _id: Long,
-    private val _onDelete: (info: UserInfo, position: Int) -> Unit,
-    private val _onDate: (info: UserInfo, position: Int) -> Unit
+    private val _onDelete: (info: UserInfoEntity, position: Int) -> Unit,
+    private val _onDate: (info: UserInfoEntity, position: Int) -> Unit
 ): RecyclerView.Adapter<WeightCardAdapter.ViewHolder>(){
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -30,7 +31,7 @@ class WeightCardAdapter(
         val _weightText = itemView.findViewById<TextView>(R.id.card_weight_text)
         val _deleteButton = itemView.findViewById<ImageButton>(R.id.card_delete_button)
 
-        fun bind(item: UserInfo){
+        fun bind(item: UserInfoEntity){
             _dateText.setText(item.getDateString())
             _weightText.setText(item.weight.toString())
         }
@@ -46,7 +47,7 @@ class WeightCardAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item: UserInfo = _items.get(position)
+        val item: UserInfoEntity = _items.get(position)
         holder._deleteButton.setOnClickListener { _onDelete(item, position) }
         holder._dateText.setOnClickListener { _onDate(item, position) }
         holder.bind(item)
@@ -56,7 +57,7 @@ class WeightCardAdapter(
         return _items.size
     }
 
-    public fun updateData(newInfo: List<UserInfo>){
+    public fun updateData(newInfo: List<UserInfoEntity>){
         _items.clear()
         _items.addAll(newInfo)
         notifyDataSetChanged()
@@ -69,7 +70,7 @@ class WeightCardAdapter(
 
     public fun DateChanged(position: Int, newDate: Long){
         val old = _items[position]
-        _items[position] = UserInfo(old.id, old.user, newDate, old.weight)
+        _items[position] = UserInfoEntity(old.uid, old.user, newDate, old.weight)
         notifyItemChanged(position)
     }
 }

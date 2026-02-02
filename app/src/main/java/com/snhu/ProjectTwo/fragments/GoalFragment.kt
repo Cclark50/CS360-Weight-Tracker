@@ -6,11 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.snhu.ProjectTwo.R
 import com.snhu.ProjectTwo.activities.CoreApp
 import com.snhu.ProjectTwo.databinding.GoalFragmentBinding
 import com.snhu.ProjectTwo.utilities.LoginDatabase
+import com.snhu.ProjectTwo.utilities.WeightDatabase
 import com.snhu.ProjectTwo.utilities.isValidWeight
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
 
@@ -46,40 +51,47 @@ class GoalFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceData: Bundle?){
         super.onViewCreated(view, savedInstanceData)
 
-        updateValues()
-        updateProgress()
+        lifecycleScope.launch {
+            updateValues()
+            updateProgress()
+        }
 
     }
 
     // Runs when the fragment has already been created and is loaded again
     override fun onResume() {
         super.onResume()
-        updateValues()
-        updateProgress()
+        lifecycleScope.launch {
+            updateValues()
+            updateProgress()
+        }
     }
 
-    fun updateValues(){
-        val db = LoginDatabase(context)
-        try{
-            val goals = db.GetGoalRow(_userId)
+    suspend fun updateValues(){
+        lifecycleScope.launch(Dispatchers.IO) {
+            val (goals, weight) = withContext(Dispatchers.IO) {
+                val db = WeightDatabase.getInstance(requireContext())
+                val goal = db.goalDao().GetGoalRow(_userId)
+                val weight = db.userInfoDao().GetInfoListByUser(_userId).get(0)
+                Pair(goal, weight)
+            }
+            if (goals == null) {
+                _goalWeight = 0f
+                binding.goalWeightShow.text = getString(R.string.goal_weight_missing_or_corrupted)
+            }
             _goalWeight = goals.goal
             _startWeight = goals.start
-        }catch (_: Exception){
-            _goalWeight = 0f
-            binding.goalWeightShow.text = getString(R.string.goal_weight_missing_or_corrupted)
-        }
-        try{
-            val list = db.GetInfoListByUser(_userId)
-            _currWeight = list.get(0).weight
-        }catch(_: Exception){
-            _currWeight = 0f
-            binding.currWeightShow.text = getString(R.string.no_current_weight_found)
-        }
-        if(_goalWeight.isValidWeight()){
-            binding.goalWeightShow.text = getString(R.string.pounds, _goalWeight)
-        }
-        if(_currWeight.isValidWeight()){
-            binding.currWeightShow.text = getString(R.string.pounds, _currWeight)
+            if (weight == null){
+                _currWeight = 0f
+                binding.currWeightShow.text = getString(R.string.no_current_weight_found)
+            }
+            _currWeight = weight.weight
+            if (_goalWeight.isValidWeight()) {
+                binding.goalWeightShow.text = getString(R.string.pounds, _goalWeight)
+            }
+            if (_currWeight.isValidWeight()) {
+                binding.currWeightShow.text = getString(R.string.pounds, _currWeight)
+            }
         }
     }
 

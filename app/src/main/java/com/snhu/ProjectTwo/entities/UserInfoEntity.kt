@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Entity(
     tableName = "userInfo",
@@ -28,4 +31,11 @@ data class UserInfoEntity(
     val date: Long,
     @ColumnInfo(name = "weight")
     val weight: Float
-)
+){
+
+    fun getDateString(): String{
+        return Instant.ofEpochMilli(date)
+            .atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("MM/dd/yyyy\nhh:mm"))
+    }
+}

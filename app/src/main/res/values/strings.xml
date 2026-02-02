@@ -53,4 +53,5 @@
     <string name="you_reached_your_goal">You Reached Your Goal!</string>
     <string name="weight_over_time">Weight Over Time</string>
     <string name="no_data_available">No Data Available</string>
+    <string name="goal_weight_could_not_be_accessed">Goal Weight Could Not Be Accessed</string>
 </resources>
