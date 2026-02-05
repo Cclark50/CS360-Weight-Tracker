@@ -95,7 +95,7 @@ class DatabaseGridFragment: Fragment(){
                     val currDate = System.currentTimeMillis()
                     try{
                         withContext(Dispatchers.IO){
-                            val db = WeightDatabase.getInstance(requireContext());
+                            val db = WeightDatabase.getInstance(requireContext())
                             AddNewWeight(_userId, currDate, currWeight, db.userInfoDao())
                             _weightList = db.userInfoDao().GetInfoListByUser(_userId).toMutableList()
                         }
@@ -106,7 +106,7 @@ class DatabaseGridFragment: Fragment(){
                         return@launch
                     }
 
-                    var goalWeightRow: GoalEntity? = null
+                    var goalWeightRow: GoalEntity?
                     var goalWeight: Float? = null
                     try{
                         goalWeightRow = withContext(Dispatchers.IO){
