@@ -98,11 +98,12 @@ class DatabaseGridFragment: Fragment(){
                             val db = WeightDatabase.getInstance(requireContext());
                             AddNewWeight(_userId, currDate, currWeight, db.userInfoDao())
                             _weightList = db.userInfoDao().GetInfoListByUser(_userId).toMutableList()
-                            _adapter.updateData(_weightList)
                         }
+                        _adapter.updateData(_weightList)
                     }catch (_: Exception){
                         Toast.makeText(context,
                             getString(R.string.could_not_add_new_weight), Toast.LENGTH_SHORT).show()
+                        return@launch
                     }
 
                     var goalWeightRow: GoalEntity? = null
